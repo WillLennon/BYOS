@@ -2,13 +2,10 @@ Write-Host "Starting windows_startup.ps1"
 
 $cwd = Convert-Path .
 Write-Host "Current folder:" $cwd
-
-Write-Host "Parent folder:"
-cd ..
-dir -s
+dir
 
 $agentDir = "\agent"
-$provisionDir = "\provisioner"
+$provisionerDir = "\provisioner"
 
 if (!(Test-Path -Path $agentDir))
 {
@@ -20,9 +17,12 @@ else
    Write-Host "agent folder already exists"
 }
 
-cd $agentDir
-
-$cwd = Convert-Path .
-Write-Host "Current folder:" $cwd
-
-dir
+if (!(Test-Path -Path $provisionerDir))
+{
+   Write-Host "Creating provisioner folder"
+   New-Item -ItemType directory -Path $provisionerDir
+}
+else
+{
+   Write-Host "provisioner folder already exists"
+}
