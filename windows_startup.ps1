@@ -1,28 +1,47 @@
 Write-Host "Starting windows_startup.ps1"
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $cwd = Convert-Path .
 Write-Host "Current folder:" $cwd
-dir
 
 $agentDir = "\agent"
-$provisionerDir = "\provisioner"
+$agentExe = Join-Path -Path $agentDir -ChildPath "bin\Agent.Listener.exe"
+$agentZip = Get-ChildItem -Path .\* -File -Include vsts-agent*.zip
 
+$provisionerDir = "\provisioner"
+$provisionerExe = Join-Path -Path $provisionerDir -ChildPath "provisioner.exe"
+$provisionerZip = Get-ChildItem -Path .\* -File -Include vsts-provisioner*.zip
+
+#
+# install the build agent if necessary
+#
 if (!(Test-Path -Path $agentDir))
 {
    Write-Host "Creating agent folder"
    New-Item -ItemType directory -Path $agentDir
 }
-else
-{
-   Write-Host "agent folder already exists"
-}
 
+if (!(Test-Path -Path $agentExe))
+{
+   Write-Host "Unzipping agent"
+   [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
+}
+Get-Item $agentExe
+
+#
+# install the provisioner if necessary
+#
 if (!(Test-Path -Path $provisionerDir))
 {
    Write-Host "Creating provisioner folder"
    New-Item -ItemType directory -Path $provisionerDir
 }
-else
+
+if (!(Test-Path -Path $provisionerExe))
 {
-   Write-Host "provisioner folder already exists"
+   Write-Host "Unzipping Provisioner"
+   [System.IO.Compression.ZipFile]::ExtractToDirectory($provisionerZip, $provisionerDir)
 }
+Get-Item $provisionerExe
+
+
