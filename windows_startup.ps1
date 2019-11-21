@@ -5,7 +5,7 @@ Write-Host "Current folder:" $cwd
 
 Write-Host "Parent folder:"
 cd ..
-dir
+dir -s
 
 $agentDir = "\agent"
 $provisionDir = "\provisioner"
