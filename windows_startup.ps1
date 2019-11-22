@@ -82,4 +82,4 @@ Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindo
 
 # run the build agent
 Write-Host "Running " $agentRun
-Start-Process $agentRun -NoNewWindow -Wait -WorkingDirectory $agentDir
+Start-Process $agentRun -NoNewWindow -WorkingDirectory $agentDir
