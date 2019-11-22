@@ -75,11 +75,11 @@ if (!(Test-Path -Path $provisionerExe))
 Get-Item $provisionerExe
 
 # configure the build agent
-$configParameters = " --unattended --url $url --auth $pat --pool $poolName"
+$configParameters = " --unattended --url $url --auth path --token $pat --pool $poolName"
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
-Invoke-Expression $config
+Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 # run the build agent
 Write-Host "Running " $agentRun
-Invoke-Expression $agentRun
+Start-Process $agentRun -NoNewWindow -Wait -WorkingDirectory $agentDir
