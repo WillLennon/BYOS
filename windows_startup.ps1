@@ -1,15 +1,15 @@
 param
 (
-   [string]$accountName,
+   [string]$url,
    [string]$poolName,
    [string]$pat
 )
 
 $errorActionPreference = 'Stop'
 
-if ([string]::IsNullOrEmpty($accountName))
+if ([string]::IsNullOrEmpty($url))
 {
-   Write-Error "AccountName is null"
+   Write-Error "URL is null"
 }
 
 if ([string]::IsNullOrEmpty($poolName))
@@ -35,6 +35,8 @@ Write-Host "Current folder:" $cwd
 $agentDir = "\agent"
 $agentExe = Join-Path -Path $agentDir -ChildPath "bin\Agent.Listener.exe"
 $agentZip = Get-ChildItem -Path .\* -File -Include vsts-agent*.zip
+$agentConfig = Join-Path -Path $agentDir -ChildPath "config.cmd"
+$agentRun = Join-Path -Path $agentDir -ChildPath "run.cmd"
 
 $provisionerDir = "\provisioner"
 $provisionerExe = Join-Path -Path $provisionerDir -ChildPath "provisioner.exe"
@@ -71,3 +73,13 @@ if (!(Test-Path -Path $provisionerExe))
    [System.IO.Compression.ZipFile]::ExtractToDirectory($provisionerZip, $provisionerDir)
 }
 Get-Item $provisionerExe
+
+# configure the build agent
+$configParameters = " --unattended --url $url --auth $pat --pool $poolName"
+$config = $agentConfig + $configParameters
+Write-Host "Running " $config
+Invoke-Expression $config
+
+# run the build agent
+Write-Host "Running " $agentRun
+Invoke-Expression $agentRun
