@@ -1,4 +1,32 @@
-Write-Host "Starting windows_startup.ps1"
+param
+(
+   [string]$accountName,
+   [string]$poolName,
+   [string]$pat
+)
+
+$errorActionPreference = 'Stop'
+
+if ([string]::IsNullOrEmpty($accountName))
+{
+   Write-Error "AccountName is null"
+}
+
+if ([string]::IsNullOrEmpty($poolName))
+{
+   Write-Error "PoolName is null"
+}
+
+if ([string]::IsNullOrEmpty($pat))
+{
+   Write-Error "PAT is null"
+}
+
+Write-Host "AccountName: " $accountName
+Write-Host "PoolName:" $poolName
+Write-Host "PAT: " $pat
+
+Write-Host "Running windows_startup.ps1"
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $cwd = Convert-Path .
@@ -43,5 +71,3 @@ if (!(Test-Path -Path $provisionerExe))
    [System.IO.Compression.ZipFile]::ExtractToDirectory($provisionerZip, $provisionerDir)
 }
 Get-Item $provisionerExe
-
-
