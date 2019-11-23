@@ -54,26 +54,6 @@ if (!(Test-Path -Path $agentExe))
 }
 Get-Item $agentExe
 
-#$provisionerDir = "\provisioner"
-#$provisionerExe = Join-Path -Path $provisionerDir -ChildPath "provisioner.exe"
-#$provisionerZip = Get-ChildItem -Path .\* -File -Include vsts-provisioner*.zip
-
-#
-# install the provisioner if necessary
-#
-#if (!(Test-Path -Path $provisionerDir))
-#{
-#   Write-Host "Creating provisioner folder"
-#   New-Item -ItemType directory -Path $provisionerDir
-#}
-
-#if (!(Test-Path -Path $provisionerExe))
-#{
-#   Write-Host "Unzipping Provisioner"
-#   [System.IO.Compression.ZipFile]::ExtractToDirectory($provisionerZip, $provisionerDir)
-#}
-#Get-Item $provisionerExe
-
 # configure the build agent
 $configParameters = " --unattended --url $url --runAsAutoLogon --noRestart  --pool $poolName --auth pat --token $pat"
 $config = $agentConfig + $configParameters
