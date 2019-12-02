@@ -3,9 +3,9 @@ echo $2
 echo $3
 
 # We require 3 inputs: $1 is url, $2 is poolName, $3 is PAT
-url = $1
-poolName = $2
-pat = $3
+url=$1
+poolName=$2
+pat=$3
 
 echo url is $url
 echo pool name is $poolName
