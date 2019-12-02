@@ -14,15 +14,16 @@ echo pat is $pat
 pwd
 ls
 
-mkdir -p /agent;
+mkdir -p /agent
 
 zipfile=$(find vsts-agent*.tar.gz)
 
 echo the zip file is $zipfile
 
-tar -zxvf  $zipfile --directory /agent;
-cd /agent;
+tar -zxvf  $zipfile --directory /agent
+cd /agent
 ls ./bin/
-./bin/installdependencies.sh;
-./config.sh --unattended --acceptTeeEula --url $url --pool $poolName --auth pat --token $pat && ./run.sh
+./bin/installdependencies.sh
+./config.sh --unattended --acceptTeeEula --url $url --pool $poolName --auth pat --token $pat
+./run.sh
 
