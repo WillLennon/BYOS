@@ -24,7 +24,9 @@ pwd
 echo installing dependencies
 ./bin/installdependencies.sh
 
-echo configuring build agent $url $pool $pat
+echo configuring build agent. AGENT_ALLOW_RUNASROOT=1
+# must set this variable so the script won't fail
+export AGENT_ALLOW_RUNASROOT=1
 ./config.sh --unattended --acceptTeeEula --url $url --pool $pool --auth pat --token $pat
 
 pwd
