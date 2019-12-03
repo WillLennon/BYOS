@@ -20,7 +20,7 @@ echo installing dependencies
 # must set this variable so the script won't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
 
-echo removing build agent in case it is already configured
+echo removing build agent
 ./config.sh remove
 
 echo configuring build agent
