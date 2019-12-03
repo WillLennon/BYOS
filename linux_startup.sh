@@ -28,6 +28,6 @@ echo configuring build agent
 
 # this last one must be run in it's own shell so we don't block
 echo running build agent
-sh ./run.sh
+sh /agent/run.sh
 
-echo done.
+echo done!
