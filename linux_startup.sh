@@ -24,15 +24,13 @@ pwd
 echo installing dependencies
 ./bin/installdependencies.sh
 
-pwd
-
 echo configuring build agent
 sh ./config.sh --unattended --acceptTeeEula --url $url --pool $poolName --auth pat --token $pat &
 
 pwd
-ls
+ls -a
 
-echo running build agent
-sh ./run.sh
+#echo running build agent
+#sh ./run.sh
 
-echo done!
+echo done?
