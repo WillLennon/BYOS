@@ -1,16 +1,14 @@
-# We require 3 inputs: $1 is url, $2 is poolName, $3 is PAT
+# We require 3 inputs: $1 is url, $2 is pool, $3 is PAT
 url=$1
 pool=$2
 pat=$3
 
-zipfile=$(find vsts-agent*.tar.gz)
-echo the zip file is $zipfile
-
-# requires root
+# Create agent folder
 echo creating agent folder
 mkdir -p -v /agent
 
-echo unzipping agent
+zipfile=$(find vsts-agent*.tar.gz)
+echo unzipping $zipfile into /agent folder
 tar -xvf  $zipfile -C /agent
 cd /agent
 
@@ -20,14 +18,11 @@ echo installing dependencies
 # must set this variable so the script won't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
 
-#echo removing build agent
-#./config.sh remove --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
-
 echo configuring build agent
 ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
-# this last one must be run in it's own shell so we don't block
+# run the agent in its own shell so we do not block this extension
 echo running build agent
 bash /agent/run.sh
 
-echo done.
+echo done
