@@ -1,7 +1,7 @@
 param
 (
    [string]$url,
-   [string]$poolName,
+   [string]$pool,
    [string]$pat
 )
 
@@ -12,9 +12,9 @@ if ([string]::IsNullOrEmpty($url))
    Write-Error "URL is null"
 }
 
-if ([string]::IsNullOrEmpty($poolName))
+if ([string]::IsNullOrEmpty($pool))
 {
-   Write-Error "PoolName is null"
+   Write-Error "Pool is null"
 }
 
 if ([string]::IsNullOrEmpty($pat))
@@ -22,15 +22,11 @@ if ([string]::IsNullOrEmpty($pat))
    Write-Error "PAT is null"
 }
 
-Write-Host "AccountName: " $accountName
-Write-Host "PoolName:" $poolName
+Write-Host "URL: " $url
+Write-Host "Pool:" $pool
 Write-Host "PAT: " $pat
 
-Write-Host "Running windows_startup.ps1"
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-
-$cwd = Convert-Path .
-Write-Host "Current folder:" $cwd
 
 $agentDir = "\agent"
 $agentExe = Join-Path -Path $agentDir -ChildPath "bin\Agent.Listener.exe"
@@ -52,10 +48,9 @@ if (!(Test-Path -Path $agentExe))
    Write-Host "Unzipping agent"
    [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
 }
-Get-Item $agentExe
 
 # configure the build agent
-$configParameters = " --unattended --url $url --runAsAutoLogon --noRestart  --pool $poolName --auth pat --token $pat"
+$configParameters = " --unattended --url $url --runAsAutoLogon --noRestart  --pool $pool --auth pat --token $pat"
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
@@ -63,3 +58,5 @@ Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindo
 # run the build agent
 Write-Host "Running " $agentRun
 Start-Process $agentRun -NoNewWindow -WorkingDirectory $agentDir
+
+Write-Host "Done"
