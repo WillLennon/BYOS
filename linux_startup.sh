@@ -26,7 +26,8 @@ export AGENT_ALLOW_RUNASROOT=1
 echo configuring build agent
 ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
+# this last one must be run in it's own shell so we don't block
 echo running build agent
-./run.sh
+sh ./run.sh
 
-echo done 2
+echo done
