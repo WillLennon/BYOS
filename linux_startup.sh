@@ -17,7 +17,7 @@ echo creating agent folder
 mkdir -p -v /agent
 
 echo unzipping agent
-tar -zxvf  $zipfile --directory /agent
+tar -xvf  $zipfile -C /agent
 cd /agent
 pwd
 
