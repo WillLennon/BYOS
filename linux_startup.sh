@@ -17,9 +17,13 @@ cd /agent
 echo installing dependencies
 ./bin/installdependencies.sh
 
-echo configuring build agent
 # must set this variable so the script won't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
+
+echo removing build agent in case it's already configured
+./config.sh remove
+
+echo configuring build agent
 ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
 echo running build agent
