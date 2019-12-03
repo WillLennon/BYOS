@@ -24,7 +24,9 @@ pwd
 echo installing dependencies
 ./bin/installdependencies.sh
 
-# requires NO sudo
-#./config.sh --unattended --acceptTeeEula --url $url --pool $poolName --auth pat --token $pat
-#./run.sh
+echo configuring build agent
+./config.sh --unattended --acceptTeeEula --url $url --pool $poolName --auth pat --token $pat
+
+echo running build agent
+./run.sh
 
