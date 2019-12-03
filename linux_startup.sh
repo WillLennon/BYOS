@@ -3,12 +3,6 @@ url=$1
 pool=$2
 pat=$3
 
-echo url is $url
-echo pool is $pool
-echo pat is $pat
-
-pwd
-
 zipfile=$(find vsts-agent*.tar.gz)
 echo the zip file is $zipfile
 
@@ -19,20 +13,16 @@ mkdir -p -v /agent
 echo unzipping agent
 tar -xvf  $zipfile -C /agent
 cd /agent
-pwd
 
 echo installing dependencies
 ./bin/installdependencies.sh
 
-echo configuring build agent. AGENT_ALLOW_RUNASROOT=1. pat is $pat
-# must set this variable so the script won't fail
+echo configuring build agent
+# must set this variable so the script won't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
 ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
-pwd
-ls -a
-
-#echo running build agent
-#sh ./run.sh
+echo running build agent
+sh ./run.sh
 
 echo done
