@@ -15,18 +15,18 @@ tar -xvf  $zipfile -C /agent
 cd /agent
 
 echo installing dependencies
-./bin/installdependencies.sh
+./bin/installdependencies.sh &
 
 # must set this variable so the script won't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
 
 echo removing build agent
-./config.sh remove
+./config.sh remove &
 
 echo configuring build agent
-./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
+./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula &
 
 echo running build agent
-sh ./run.sh
+./run.sh
 
 echo done
