@@ -17,12 +17,12 @@ echo creating agent folder
 mkdir -p -v /agent
 
 echo unzipping agent
-#tar -zxvf  $zipfile --directory /agent
-#cd /agent
-#ls ./bin/
+tar -zxvf  $zipfile --directory /agent
+cd /agent
+pwd
 
-# requires sudo
-#./bin/installdependencies.sh
+echo installing dependencies
+./bin/installdependencies.sh
 
 # requires NO sudo
 #./config.sh --unattended --acceptTeeEula --url $url --pool $poolName --auth pat --token $pat
