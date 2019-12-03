@@ -20,8 +20,8 @@ echo installing dependencies
 # must set this variable so the script won't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
 
-echo removing build agent
-./config.sh remove --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
+#echo removing build agent
+#./config.sh remove --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
 echo configuring build agent
 ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
@@ -29,4 +29,4 @@ echo configuring build agent
 echo running build agent
 ./run.sh
 
-echo done 1
+echo done 2
