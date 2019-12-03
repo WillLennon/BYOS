@@ -1,7 +1,3 @@
-echo $1
-echo $2
-echo $3
-
 # We require 3 inputs: $1 is url, $2 is poolName, $3 is PAT
 url=$1
 poolName=$2
@@ -13,13 +9,14 @@ echo pat is $pat
 
 pwd
 
-# requires sudo
-#mkdir -p /agent
-
 zipfile=$(find vsts-agent*.tar.gz)
-
 echo the zip file is $zipfile
 
+# requires root
+echo creating agent folder
+mkdir -p -v /agent
+
+echo unzipping agent
 #tar -zxvf  $zipfile --directory /agent
 #cd /agent
 #ls ./bin/
