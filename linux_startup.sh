@@ -24,10 +24,10 @@ pwd
 echo installing dependencies
 ./bin/installdependencies.sh
 
-echo configuring build agent. AGENT_ALLOW_RUNASROOT=1
+echo configuring build agent. AGENT_ALLOW_RUNASROOT=1. pat is $pat
 # must set this variable so the script won't fail
 export AGENT_ALLOW_RUNASROOT=1
-./config.sh --unattended --acceptTeeEula --url $url --pool $pool --auth pat --token $pat
+./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
 pwd
 ls -a
