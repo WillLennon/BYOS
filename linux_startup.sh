@@ -30,3 +30,4 @@ echo configuring build agent
 echo running build agent
 sh ./run.sh
 
+echo done
