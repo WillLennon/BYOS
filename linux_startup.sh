@@ -17,11 +17,18 @@ cd /agent
 echo installing dependencies
 ./bin/installdependencies.sh
 
+# configure the build agent
 # must set this variable so the build agent scripts don't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
-
 echo configuring build agent
 ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
+
+# configure crontab to restart the build agent after reboots
+echo enabling crontab to restart the build agent after reboot
+echo "@reboot /agent/run.sh" > startup.sh
+crontab startup.sh
+rm startup.sh
+crontab -l
 
 # run the agent in its own shell so we do not block this extension
 echo running build agent
