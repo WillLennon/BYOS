@@ -17,7 +17,7 @@ cd /agent
 echo installing dependencies
 ./bin/installdependencies.sh
 
-# must set this variable so the script won't complain that we're running as root
+# must set this variable so the build agent scripts don't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
 
 echo configuring build agent
