@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # We require 3 inputs: $1 is url, $2 is pool, $3 is PAT
 url=$1
 pool=$2
