@@ -34,4 +34,4 @@ crontab -l
 echo running build agent
 bash /agent/run.sh
 
-echo done
+echo done!
