@@ -25,7 +25,7 @@ echo configuring build agent
 
 # configure crontab to restart the build agent after reboots
 echo enabling crontab to restart the build agent after reboot
-printf "@reboot sleep 10 && cd /agent && /agent/run.sh \n" > startup.sh
+printf "@reboot sleep 10 && cd /agent && bash /agent/run.sh \n" > startup.sh
 crontab startup.sh
 rm startup.sh
 crontab -l
@@ -34,4 +34,4 @@ crontab -l
 echo running build agent
 bash /agent/run.sh
 
-echo done!
+echo done
