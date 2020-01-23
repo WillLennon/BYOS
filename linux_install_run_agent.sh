@@ -22,7 +22,7 @@ echo installing dependencies
 # must set this variable so the build agent scripts don't complain that we're running as root
 export AGENT_ALLOW_RUNASROOT=1
 echo configuring build agent
-./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
+./config.sh --unattended --url $url --pool \'$pool\' --auth pat --token $pat --acceptTeeEula
 
 # configure crontab to restart the build agent after reboots
 # echo enabling crontab to restart the build agent after reboot
