@@ -1,7 +1,7 @@
 param
 (
    [string]$url,
-   [string]$poolName,
+   [string]$pool,
    [string]$pat
 )
 
@@ -12,9 +12,9 @@ if ([string]::IsNullOrEmpty($url))
    Write-Error "URL is null"
 }
 
-if ([string]::IsNullOrEmpty($poolName))
+if ([string]::IsNullOrEmpty($pool))
 {
-   Write-Error "PoolName is null"
+   Write-Error "Pool is null"
 }
 
 if ([string]::IsNullOrEmpty($pat))
@@ -23,7 +23,7 @@ if ([string]::IsNullOrEmpty($pat))
 }
 
 Write-Host "URL: " $url
-Write-Host "PoolName:" $poolName
+Write-Host "Pool:" $pool
 Write-Host "PAT: " $pat
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -50,7 +50,7 @@ if (!(Test-Path -Path $agentExe))
 }
 
 # configure the build agent
-$configParameters = " --unattended --url $url --runAsAutoLogon --noRestart  --pool ""$poolName"" --auth pat --token $pat"
+$configParameters = " --unattended --url $url --runAsAutoLogon --noRestart  --pool ""$pool"" --auth pat --token $pat"
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
