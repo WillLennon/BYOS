@@ -31,7 +31,9 @@ echo \'$pool\'
 echo 4
 echo ''$pool''
 echo 5
-./config.sh --unattended --url $url --pool \'$pool\' --auth pat --token $pat --acceptTeeEula
+echo \"$pool\"
+echo 6
+./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $pat --acceptTeeEula
 
 # configure crontab to restart the build agent after reboots
 # echo enabling crontab to restart the build agent after reboot
