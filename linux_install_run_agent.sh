@@ -23,7 +23,10 @@ echo installing dependencies
 export AGENT_ALLOW_RUNASROOT=1
 echo configuring build agent
 
-./config.sh --unattended --url $url --pool \'$pool\' --auth pat --token $pat --acceptTeeEula
+# $pool *should* be in quotes like \'$pool\' so it will support spaces in the name,
+# but apparently that causes the config script to fail.  The script thinks the quotes
+# are part of the pool name!  So for now we cannot support spaces in the Linux pool name :(
+./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
 # configure crontab to restart the build agent after reboots
 # echo enabling crontab to restart the build agent after reboot
