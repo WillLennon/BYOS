@@ -43,6 +43,8 @@ if (!(Test-Path -Path $agentDir))
    New-Item -ItemType directory -Path $agentDir
 }
 
+Copy-item ./windows_run_agent.ps1 /agent/windows_run_agent.ps1
+
 if (!(Test-Path -Path $agentExe))
 {
    Write-Host "Unzipping agent"
