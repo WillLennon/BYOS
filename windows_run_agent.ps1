@@ -5,5 +5,5 @@ $agentDir = "\agent"
 $agentRun = Join-Path -Path $agentDir -ChildPath "run.cmd"
 $start= (Get-Date).AddSeconds(10)
 $time = New-ScheduledTaskTrigger -At $start -Once 
-$cmd = New-ScheduledTaskAction -Execute $agentRun
+$cmd = New-ScheduledTaskAction -Execute $agentRun -WorkingDirectory $agentDir
 Register-ScheduledTask -TaskName "BuildAgent" -Trigger $time -Action $cmd -TaskPath $agentDir
