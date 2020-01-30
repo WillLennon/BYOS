@@ -9,6 +9,9 @@ pat=$3
 echo creating agent folder
 mkdir -p -v /agent
 
+# Copy run script
+cp linux_run_agent.sh /agent/linux_run_agent.sh
+
 zipfile=$(find vsts-agent*.tar.gz)
 echo unzipping $zipfile into /agent folder
 tar -xvf  $zipfile -C /agent
