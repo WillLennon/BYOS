@@ -42,6 +42,6 @@ echo configuring build agent
 # crontab -l
 
 # schedule the build agent to run immediately
-echo "export AGENT_ALLOW_RUNASROOT=1; sh /agent/run.sh" | at now
+echo "export AGENT_ALLOW_RUNASROOT=1; bash /agent/run.sh" | at now
 
 echo done
