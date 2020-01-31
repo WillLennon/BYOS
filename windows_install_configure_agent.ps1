@@ -59,4 +59,4 @@ Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 # schedule the build agent to run immediately
-Start-Process -FilePath Powershell.exe -ArgumentList $runPath -NoNewWindow -Wait
+Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runPath" -NoNewWindow -Wait
