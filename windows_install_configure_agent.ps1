@@ -34,9 +34,7 @@ $agentZip = Get-ChildItem -Path .\* -File -Include vsts-agent*.zip
 $agentConfig = Join-Path -Path $agentDir -ChildPath "config.cmd"
 $agentRun = Join-Path -Path $agentDir -ChildPath "run.cmd"
 
-#
 # install the build agent if necessary
-#
 if (!(Test-Path -Path $agentDir))
 {
    Write-Host "Creating agent folder"
