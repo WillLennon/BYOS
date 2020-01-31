@@ -6,7 +6,6 @@ param
 )
 
 $errorActionPreference = 'Stop'
-Set-ExecutionPolicy Unrestricted
 
 if ([string]::IsNullOrEmpty($url))
 {
