@@ -43,7 +43,10 @@ if (!(Test-Path -Path $agentDir))
    New-Item -ItemType directory -Path $agentDir
 }
 
-Copy-item ./windows_run_agent.ps1 /agent/windows_run_agent.ps1
+# copy run script to the agent folder
+$runScript = "windows_run_agent.ps1"
+$runPath = Join-Path -Path $agentDir -ChildPath $runScript
+Copy-item $runScript $runPath
 
 if (!(Test-Path -Path $agentExe))
 {
@@ -58,7 +61,4 @@ Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 # schedule the build agent to run immediately
-$start = (Get-Date).AddSeconds(5)
-$time = New-ScheduledTaskTrigger -At $start -Once 
-$cmd = New-ScheduledTaskAction -Execute \agent\run.cmd -WorkingDirectory \agent
-Register-ScheduledTask -TaskName "BuildAgent" -Trigger $time -Action $cmd -TaskPath \agent -Force
+Start-Process -FilePath $runPath -NoNewWindow -Wait -WorkingDirectory $agentDir
