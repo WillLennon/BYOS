@@ -53,7 +53,7 @@ if (!(Test-Path -Path $agentExe))
 }
 
 # configure the build agent
-$configParameters = " --unattended --url $url --runAsAutoLogon --noRestart  --pool ""$pool"" --auth pat --token $pat"
+$configParameters = " --unattended --url $url --noRestart  --pool ""$pool"" --auth pat --token $pat"
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
