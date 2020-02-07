@@ -33,11 +33,11 @@ echo configuring build agent
 # are part of the pool name!  So for now we cannot support spaces in the Linux pool name :(
 echo $pool
 echo '$pool'
-echo "$pool$
+echo "$pool$"
 echo \'$pool\'
 echo \"$pool\"
 
-./config.sh --unattended --url $url --pool \'$pool\' --auth pat --token $pat --acceptTeeEula
+./config.sh --unattended --url $url --pool '$pool' --auth pat --token $pat --acceptTeeEula
 
 # configure crontab to restart the build agent after reboots
 # echo enabling crontab to restart the build agent after reboot
