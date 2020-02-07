@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # We require 3 inputs: $1 is url, $2 is pool, $3 is PAT
+# wrap $pool in quotes to handle spaces
 url=$1
-pool=$2
+pool='$2'
 pat=$3
 
 # Create agent folder
@@ -28,19 +29,8 @@ apt install at
 export AGENT_ALLOW_RUNASROOT=1
 echo configuring build agent
 
-# $pool *should* be in quotes like \'$pool\' so it will support spaces in the name,
-# but apparently that causes the config script to fail.  The script thinks the quotes
-# are part of the pool name!  So for now we cannot support spaces in the Linux pool name :(
 echo $pool
-echo '$pool'
-echo "$pool$"
-echo \'$pool\'
-echo \"$pool\"
-echo $2
-echo '$2'
-
-
-./config.sh --unattended --url $url --pool '$2' --auth pat --token $pat --acceptTeeEula
+./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
 # configure crontab to restart the build agent after reboots
 # echo enabling crontab to restart the build agent after reboot
