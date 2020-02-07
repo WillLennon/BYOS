@@ -3,7 +3,7 @@
 # We require 3 inputs: $1 is url, $2 is pool, $3 is PAT
 # wrap $pool in quotes to handle spaces
 url=$1
-pool='$2'
+pool=\'${2}\'
 pat=$3
 
 # Create agent folder
