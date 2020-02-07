@@ -30,7 +30,7 @@ echo configuring build agent
 
 $pool="$pool"
 echo $pool
-./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
+/bin/bash ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
 # configure crontab to restart the build agent after reboots
 # echo enabling crontab to restart the build agent after reboot
@@ -41,6 +41,6 @@ echo $pool
 # crontab -l
 
 # schedule the build agent to run immediately
-./linux_run_agent.sh
+/bin/bash ./linux_run_agent.sh
 
 echo done
