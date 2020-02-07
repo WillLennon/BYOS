@@ -29,7 +29,7 @@ apt install at
 export AGENT_ALLOW_RUNASROOT=1
 echo configuring build agent
 
-$pool='$pool'
+$pool="$pool"
 echo $pool
 ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
