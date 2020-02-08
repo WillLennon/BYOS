@@ -30,6 +30,9 @@ echo configuring build agent
 
 $pool="$pool"
 echo $pool
+echo '--pool $pool'
+echo '--pool "$pool"'
+
 /bin/bash ./config.sh --unattended --url $url --pool $pool --auth pat --token $pat --acceptTeeEula
 
 # configure crontab to restart the build agent after reboots
