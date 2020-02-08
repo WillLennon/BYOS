@@ -28,11 +28,7 @@ apt install at
 export AGENT_ALLOW_RUNASROOT=1
 echo configuring build agent
 
-echo $pool
-echo '--pool $pool'
-echo '--pool "$pool"'
-echo '--pool \"$pool\"'
-
+# calling bash here so the quotation marks around $pool get respected
 /bin/bash ./config.sh --unattended --url $url --pool "$pool" --auth pat --token $pat --acceptTeeEula
 
 # configure crontab to restart the build agent after reboots
