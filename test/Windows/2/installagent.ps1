@@ -2,29 +2,9 @@ param
 (
    [string]$url,
    [string]$pool,
-   [string]$pat
+   [string]$pat,
+   [string]$runArgs
 )
-
-$errorActionPreference = 'Stop'
-
-if ([string]::IsNullOrEmpty($url))
-{
-   Write-Error "URL is null"
-}
-
-if ([string]::IsNullOrEmpty($pool))
-{
-   Write-Error "Pool is null"
-}
-
-if ([string]::IsNullOrEmpty($pat))
-{
-   Write-Error "PAT is null"
-}
-
-Write-Host "URL: " $url
-Write-Host "Pool:" $pool
-Write-Host "PAT: " $pat
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
@@ -42,10 +22,12 @@ if (!(Test-Path -Path $agentDir))
 }
 
 # copy run script to the agent folder
-$runScript = "runagent.ps1"
-$runPath = Join-Path -Path $agentDir -ChildPath $runScript
-Copy-item $runScript $runPath
+$runFile = "runagent.ps1"
+$runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
+$runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
+Copy-item $runFileSource $runFileDest
 
+#unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
 {
    Write-Host "Unzipping agent"
@@ -53,10 +35,10 @@ if (!(Test-Path -Path $agentExe))
 }
 
 # configure the build agent
-$configParameters = " --unattended --url $url --noRestart  --pool ""$pool"" --auth pat --token $pat"
+$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $pat"
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
-# schedule the build agent to run immediately
-Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runPath"
+# schedule the build agent to run
+Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs"
