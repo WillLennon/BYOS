@@ -25,7 +25,7 @@ if (!(Test-Path -Path $agentDir))
 $runFile = "runagent.ps1"
 $runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
 $runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
-Copy-Item $runFileSource $runFileDest -Force
+Copy-item $runFileSource $runFileDest
 
 #unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
@@ -39,11 +39,6 @@ $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRe
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
-
-if (!(Test-Path -Path $runFileDest))
-{
-   Start-Sleep -Seconds 30
-}
 
 # schedule the build agent to run
 Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs"
