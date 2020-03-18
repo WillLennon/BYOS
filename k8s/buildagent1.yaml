@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: buildagent
+spec:
+  initContainers:
+
+  # First download and unzip the build agent:
+  #
+  # this doesn't work because you cannot install the dependencies in the init container
+  #
+  - name: init
+    image: busybox
+    command: ['sh', '-c']
+    args:
+      - set -x;
+        cd /download;
+        wget https://vstsagentpackage.azureedge.net/agent/2.165.0/vsts-agent-linux-x64-2.165.0.tar.gz;
+        tar -xvf vsts-agent-linux-x64-2.165.0.tar.gz -C /agent;
+        cd /agent;
+        ls -alt /agent/bin/installdependencies.sh;
+        sh /agent/bin/installdependencies.sh;
+        echo DONE!;
+    volumeMounts:
+    - name: agentdir
+      mountPath: "/agent"
+    - name: downloaddir
+      mountPath: /download
+
+  # This is the main container that runs after the init container finishes
+  containers:
+  - name: main
+    image: ubuntu
+    command: ['bash', '-c', 'echo The box is running!; sleep 3600']
+    volumeMounts:
+    - name: agentdir
+      mountPath: /agent
+    - name: downloaddir
+      mountPath: /download
+  # do we need this?
+  dnsPolicy: Default
+  # Here is the shared drive:
+  volumes:
+  - name: agentdir
+    emptyDir: {}
+  - name: downloaddir
+    emptyDir: {}
+
