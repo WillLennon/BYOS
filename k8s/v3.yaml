@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: buildagent
+spec:
+  containers:
+  - name: main
+    image: ubuntu
+    command: ['bash', '-c']
+    args:
+      - set -x;
+        apt-get update;
+        apt-get install wget -y;
+        apt-get install tar -y;
+        mkdir /download;
+        mkdir /agent;
+        cd /download;
+        wget https://vstsagentpackage.azureedge.net/agent/2.165.0/vsts-agent-linux-x64-2.165.0.tar.gz;
+        tar -xvf vsts-agent-linux-x64-2.165.0.tar.gz -C /agent;
+        cd /agent;
+        bash /agent/bin/installdependencies.sh;
+        export AGENT_ALLOW_RUNASROOT=1;
+        echo running!;
+        sleep 3600;
+
+  # do we need this?
+  dnsPolicy: Default
+
