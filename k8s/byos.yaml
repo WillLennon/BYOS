@@ -22,8 +22,7 @@ spec:
           value: ""
         command: ['bash', '-c']
         args:
-          - set -x;
-            apt-get update;
+          - apt-get update;
             apt-get install wget -y;
             apt-get install tar -y;
             apt-get install git -y;
@@ -39,4 +38,4 @@ spec:
             bash ./config.sh --unattended --url https://dev.azure.com/testabuse --pool "K8s pool" --acceptTeeEula --replace --auth pat --token <token>;
             bash ./run.sh $(RUN_ONCE);
             echo running!;
-            sleep 3600;
+            
