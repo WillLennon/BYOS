@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: buildagent
+spec:
+  containers:
+  - name: main
+    image: ubuntu
+    env:
+    - name: ACCOUNT_URL
+      value: "https://dev.azure.com/testabuse"
+    - name: POOL_NAME
+      value: "K8s pool"
+    - name: TOKEN
+      value: "<token>"
+    - name: RUN_ONCE
+      value: "--once"
+    command: ['bash', '-c']
+    args:
+      - set -x;
+        apt-get update;
+        apt-get install wget -y;
+        apt-get install tar -y;
+        apt-get install git -y;
+        apt-get install inetutils-ping -y;
+        mkdir /download;
+        mkdir /agent;
+        cd /download;
+        wget https://vstsagentpackage.azureedge.net/agent/2.165.0/vsts-agent-linux-x64-2.165.0.tar.gz;
+        tar -xvf vsts-agent-linux-x64-2.165.0.tar.gz -C /agent;
+        cd /agent;
+        bash /agent/bin/installdependencies.sh;
+        export AGENT_ALLOW_RUNASROOT=1;
+        bash ./config.sh --unattended --url $(ACCOUNT_URL) --pool "$(POOL_NAME)" --acceptTeeEula --replace --auth pat --token $(TOKEN);
+        bash ./run.sh $(RUN_ONCE);
+        echo running!;
+        sleep 3600;
+
+  # do we need this?
+  dnsPolicy: Default
