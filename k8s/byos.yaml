@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: byos
+  labels:
+    app: buildagent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: buildagent
+  template:
+    metadata:
+      labels:
+        app: buildagent
+    spec:
+      containers:
+      - name: build
+        image: ubuntu
+        env:
+        - name: RUN_ONCE
+          value: ""
+        command: ['bash', '-c']
+        args:
+          - set -x;
+            apt-get update;
+            apt-get install wget -y;
+            apt-get install tar -y;
+            apt-get install git -y;
+            apt-get install inetutils-ping -y;
+            mkdir /download;
+            mkdir /agent;
+            cd /download;
+            wget https://vstsagentpackage.azureedge.net/agent/2.165.0/vsts-agent-linux-x64-2.165.0.tar.gz;
+            tar -xvf vsts-agent-linux-x64-2.165.0.tar.gz -C /agent;
+            cd /agent;
+            bash /agent/bin/installdependencies.sh;
+            export AGENT_ALLOW_RUNASROOT=1;
+            bash ./config.sh --unattended --url https://dev.azure.com/testabuse --pool "K8s pool" --acceptTeeEula --replace --auth pat --token <token>;
+            bash ./run.sh $(RUN_ONCE);
+            echo running!;
+            sleep 3600;
