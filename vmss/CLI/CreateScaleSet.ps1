@@ -51,7 +51,6 @@ else
     Write-Host "Resource Group" $inputs.ResourceGroup "already exists."
 }
 
-
 Write-Host "Creating ScaleSet"
 
 az vmss create `
@@ -60,12 +59,12 @@ az vmss create `
     --image $inputs.Image `
     --vm-sku $inputs.VMSKU `
     --storage-sku $inputs.StorageSKU `
-    --authentication-type $inputs.AuthenticationType
+    --authentication-type $inputs.AuthenticationType `
     --admin-username $inputs.AdminUsername `
     --admin-password $inputs.AdminPassword `
     --instance-count 0 `
     --disable-overprovision `
     --upgrade-policy-mode manual `
-    --load-balancer '""'
+    --load-balancer '""' `
 
 Write-Host "Done"
