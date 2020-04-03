@@ -3,10 +3,10 @@
   // https://docs.microsoft.com/en-us/cli/azure/vmss?view=azure-cli-latest#az-vmss-create
   
   // Your Azure Subscription Name or Id
-  "SubscriptionId" : "",
+  "SubscriptionId": "",
 
   // Azure Region to create the ScaleSet
-  "AzureRegion" : "",
+  "AzureRegion": "",
 
   // Name of your ScaleSet to create
   "ScaleSetName": "",
