@@ -1,7 +1,7 @@
-{
-  // For more details about the ScaleSet creation parameters, see
-  // https://docs.microsoft.com/en-us/cli/azure/vmss?view=azure-cli-latest#az-vmss-create
+// For more details about the ScaleSet creation parameters, see
+// https://docs.microsoft.com/en-us/cli/azure/vmss?view=azure-cli-latest#az-vmss-create
   
+{
   // Your Azure Subscription Name or Id
   "SubscriptionId": "",
 
