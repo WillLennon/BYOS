@@ -7,10 +7,11 @@ $errorActionPreference = 'Stop'
 
 if ([string]::IsNullOrEmpty($inputsFile))
 {
-   #Write-Error "Please provide a json file with input parameters"
-   $inputsFile = "./createScaleset.parameters.json"
+   $inputsFile = "./CreateScaleset.parameters.json"
 }
 
+# For more details about the input parameters, see
+# https://docs.microsoft.com/en-us/cli/azure/vmss?view=azure-cli-latest#az-vmss-create
 
 class Inputs 
 {
@@ -19,24 +20,23 @@ class Inputs
     [string] $ScaleSetName
     [string] $ResourceGroup
     [string] $Image
-    [string] $SKU
+    [string] $VMSKU
+    [string] $StorageSKU
+    [string] $AuthenticationType
+    [string] $AdminUsername
+    [string] $AdminPassword
 }
 
 Write-Host
 Write-Host "Reading inputs from" $inputsFile
 
-$inputs = [Inputs](Get-Content $inputsFile | Out-String | ConvertFrom-Json)
+$inputs = [Inputs]((Get-Content $inputsFile)  -replace '^\s*//.*' | Out-String | ConvertFrom-Json)
+$inputs
 
-Write-Host "SubscriptionId:" $inputs.SubscriptionId
-Write-Host "Azure Region:" $inputs.AzureRegion
-Write-Host "ScaleSet Name:" $inputs.ScaleSetName
-Write-Host "Resource Group:" $inputs.ResourceGroup
-Write-Host "Image:" $inputs.Image
-Write-Host "SKU:" $inputs.SKU
 Write-Host
-
 Write-Host "Setting Azure Subscription"
 az account set --subscription $inputs.SubscriptionId
+
 
 $exists = az group exists --name $inputs.ResourceGroup
 $rgExists = [System.Convert]::ToBoolean($exists)
@@ -58,12 +58,14 @@ az vmss create `
     --name $inputs.ScaleSetName `
     --resource-group $inputs.ResourceGroup `
     --image $inputs.Image `
-    --vm-sku $inputs.SKU `
+    --vm-sku $inputs.VMSKU `
+    --storage-sku $inputs.StorageSKU `
+    --authentication-type $inputs.AuthenticationType
+    --admin-username $inputs.AdminUsername `
+    --admin-password $inputs.AdminPassword `
     --instance-count 0 `
     --disable-overprovision `
     --upgrade-policy-mode manual `
-    --storage-sku Standard_LRS `
     --load-balancer '""'
 
 Write-Host "Done"
-
