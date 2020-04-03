@@ -1,49 +1,39 @@
 {
-  // [REQUIRED]
   // Your Azure Subscription Name or Id
   "SubscriptionId" : "",
 
-  // [REQUIRED]
   // Azure Region to create the ScaleSet
   "AzureRegion" : "",
 
-  // [REQUIRED]
   // Name of your ScaleSet to create
   "ScaleSetName": "",
 
-  // [REQUIRED]
   // Azure Resource Group to put your ScaleSet.  Will be created if it does not exist.
   "ResourceGroup": "",
 
-  // [REQUIRED]
   // OS Image of your ScaleSet VMs.
   // To create a custom image, see: https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/tutorial-use-custom-image-cli
   // To see default images, run: az vm image list --output table
   // Examples: UbuntuLTS, Win2019Datacenter
   "Image": "UbuntuLTS",
 
-  // [OPTIONAL]
   // VM SKU
   // For available options, see:
   // https://docs.microsoft.com/en-us/azure/virtual-machines/linux/sizes
   // https://docs.microsoft.com/en-us/azure/virtual-machines/windows/sizes
   "VMSKU": "Standard_D2_v3",
 
-  // [OPTIONAL]
   // Storage SKU
   // Standard_LRS, Premium_LRS, StandardSSD_LRS, UltraSSD_LRS
   "StorageSKU": "StandardSSD_LRS",
   
-  // [OPTIONAL]
   // Authentication type.
   // Windows defaults to 'Password'. Linux defaults to 'SSH'. 'All' enables both types.
   "AuthenticationType": "",
 
-  // [OPTIONAL]
   // Administrator UserName
   "AdminUsername": "",
 
-  // [OPTIONAL]
   // Administrator Password, if AuthenticationType is 'Password'
   "AdminPassword": ""
 }
