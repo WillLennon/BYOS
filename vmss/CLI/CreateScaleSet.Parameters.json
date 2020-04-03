@@ -3,6 +3,6 @@
   "AzureRegion" : "EastUS2",
   "ScaleSetName": "",
   "ResourceGroup": "",
-  "Image": "myImage",
+  "Image": "UbuntuLTS",
   "SKU": "Standard_D2_v3"
 }
