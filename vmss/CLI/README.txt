@@ -8,9 +8,8 @@ Steps to create an Azure Virtual Machine Scale Set (VMSS) for use with Azure Dev
    https://raw.githubusercontent.com/WillLennon/BYOS/master/vmss/CLI/CreateScaleSet.Parameters.json
 
 3. Edit the CreateScaleSet.Parameters.json file with your desired inputs.
-   notepad CreateScaleSet.Parameters.json
    
-4. Login to your Azure subscription via this command and follow the pop-up instructions
+4. Login to your Azure subscription via this AZ CLI command and follow the pop-up instructions
    az login
 
 5. Run CreateScaleSet.ps1 to create your scaleset.
