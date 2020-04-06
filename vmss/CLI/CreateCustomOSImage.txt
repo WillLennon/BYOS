@@ -9,20 +9,20 @@ More details can be found in documents here:
 
    2a. Extend the OS disk size from 128GB to 200GB
        Open DiskPart tool as administrator and run these DiskPart commands:
-         list volume  (to see the volumes)
-         select volume 2 (depends on which volume is the OS drive)
-         extend size=62000 (to extend the drive by 62 GiB)
+          list volume  (to see the volumes)
+          select volume 2 (depends on which volume is the OS drive)
+          extend size=62000 (to extend the drive by 62 GiB)
 
    2b. Install desired software on the VM
 
 3. Deallocate the VM so we can generalize it:
-	 az vm deallocate --resource-group <myResourceGroup> --name <MyVM>
+     az vm deallocate --resource-group <myResourceGroup> --name <MyVM>
 
 4. Generalize the VM to prep the VM image:
-	 az vm generalize --resource-group <myResourceGroup> --name <MyVM>
+     az vm generalize --resource-group <myResourceGroup> --name <MyVM>
 
 5. Create a VM Image based on the generalized image:
-   az image create  --resource-group <myResourceGroup> --name <MyImage> --source <MyVM>
+     az image create  --resource-group <myResourceGroup> --name <MyImage> --source <MyVM>
 
 6. Create the scaleset based on the custom VM image:
-   az vmss create --resource-group <myResourceGroup> --name <myScaleSet> --image <MyImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 0 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
+     az vmss create --resource-group <myResourceGroup> --name <myScaleSet> --image <MyImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 0 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
