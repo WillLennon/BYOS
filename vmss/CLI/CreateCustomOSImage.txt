@@ -7,11 +7,11 @@ More details can be found in documents here:
 
 2. Remote Desktop to the VM's public IP address to customize the image.
 
-	 2a. Extend the OS disk size from 128GB to 200GB
+   2a. Extend the OS disk size from 128GB to 200GB
        Open DiskPart tool as administrator and run these DiskPart commands:
-					list volume  (to see the volumes)
-					select volume 2 (depends on which volume is the OS drive)
-					extend size=62000 (to extend the drive by 62 GiB)
+         list volume  (to see the volumes)
+         select volume 2 (depends on which volume is the OS drive)
+         extend size=62000 (to extend the drive by 62 GiB)
 
    2b. Install desired software on the VM
 
