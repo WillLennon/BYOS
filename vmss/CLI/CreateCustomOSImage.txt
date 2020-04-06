@@ -14,11 +14,16 @@ More details can be found in documents here:
           extend size=62000 (to extend the drive by 62 GiB)
 
    2b. Install desired software on the VM
+   
+   2c. Generalize the VM by running C:\Windows\System32\sysprep.exe
+       Select System Out-Of-Box Experience (OOBE)
+       Click Generalize checkbox
+       Select Shutdown from dropdown menu.
 
-3. Deallocate the VM so we can generalize it:
+3. Deallocate the VM so we can create the image
      az vm deallocate --resource-group <myResourceGroup> --name <MyVM>
 
-4. Generalize the VM to prep the VM image:
+4. Mark the VM as Generalized:
      az vm generalize --resource-group <myResourceGroup> --name <MyVM>
 
 5. Create a VM Image based on the generalized image:
