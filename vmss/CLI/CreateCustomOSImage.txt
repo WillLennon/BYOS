@@ -15,7 +15,7 @@ More details can be found in documents here:
 
    2b. Install desired software on the VM
    
-   2c. Generalize the VM by running C:\Windows\System32\sysprep.exe.  In the window that pops up:
+   2c. Generalize the VM by running C:\Windows\System32\sysprep\sysprep.exe.  In the window that pops up:
        Select System Out-Of-Box Experience (OOBE)
        Click Generalize checkbox
        Select Shutdown from dropdown menu
