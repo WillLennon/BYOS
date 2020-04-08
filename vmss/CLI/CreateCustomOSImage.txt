@@ -20,7 +20,7 @@ More details can be found in documents here:
        [Windows] From an admin console window, run: C:\Windows\System32\sysprep\sysprep.exe /generalize /oobe /shutdown
        [Linux] sudo waagent -deprovision+user -force
        
-   VERY IMPORTANT: Wait for the VM to finish generalization and shutdown the VM! Allow 20 minutes.
+   VERY IMPORTANT: Wait for the VM to finish generalization and shutdown the VM! Allow 30 minutes.
 
 3. Stop the VM
      az vm stop --resource-group <myResourceGroup> --name <MyVM>
