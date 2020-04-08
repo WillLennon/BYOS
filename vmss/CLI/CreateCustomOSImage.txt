@@ -38,4 +38,6 @@ More details can be found in documents here:
     az vm create --resource-group <myResourceGroup> --name <MyNewVM> --image <MyImage> --admin-username myUserName --admin-password myPassword
     
 8. Create the scaleset based on the custom VM image:
-     az vmss create --resource-group <myResourceGroup> --name <myScaleSet> --image <MyImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 0 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
+     az vmss create --resource-group <myResourceGroup> --name <myScaleSet> --image <MyImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 1 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
+     
+9.  Verify the VM created in the scaleset comes online
