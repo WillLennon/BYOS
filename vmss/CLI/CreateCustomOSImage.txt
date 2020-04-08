@@ -34,10 +34,7 @@ More details can be found in documents here:
 6. Create a VM Image based on the generalized image:
      az image create  --resource-group <myResourceGroup> --name <MyImage> --source <MyVM>
 
-7. Verify the Image is ready by creating a new VM from it:
-    az vm create --resource-group <myResourceGroup> --name <MyNewVM> --image <MyImage> --admin-username myUserName --admin-password myPassword
-    
-8. Create the scaleset based on the custom VM image:
+7. Create the scaleset based on the custom VM image:
      az vmss create --resource-group <myResourceGroup> --name <myScaleSet> --image <MyImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 1 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
      
-9.  Verify the VM created in the scaleset comes online
+8.  Verify the VM created in the scaleset comes online and reaches the Succeeded state
