@@ -2,22 +2,22 @@ Steps to create a Azure Scaleset with a custom OS disk size of 200gb and custom 
 
 1.  Create a VM with capacity for 200GB OS drive. 
     1a. If starting with a publicly available Azure Image, for example Windows 2019 DataCenter:
-    az vm create --resource-group <myResourceGroup> --name <MyVM> --image Win2019DataCenter --os-disk-size-gb 200  --admin-username myUserName --admin-password myPassword
+        az vm create --resource-group <myResourceGroup> --name <MyVM> --image Win2019DataCenter --os-disk-size-gb 200  --admin-username myUserName --admin-password myPassword
     
     1b. If starting with a generalized VHD, first create the VM with an unmanaged disk of the desired size and then convert to a managed disk:
-    az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myVhdUrl> --os-type windows --os-disk-size-gb 200 --use-unmanaged-disk --admin-username <myUserName> --admin-password <myPassword> --storage-account <myVhdStorageAccount>
+        az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myVhdUrl> --os-type windows --os-disk-size-gb 200 --use-unmanaged-disk --admin-username <myUserName> --admin-password <myPassword> --storage-account <myVhdStorageAccount>
 
-    1b-2. Shutdown the VM
-    az vm shutdown --resource-group <myResourceGroup> --name <MyVM>
+        1b-2. Shutdown the VM
+        az vm shutdown --resource-group <myResourceGroup> --name <MyVM>
 
-    1b-3. Deallocate the VM
-    az vm deallocate --resource-group <myResourceGroup> --name <MyVM>
+        1b-3. Deallocate the VM
+        az vm deallocate --resource-group <myResourceGroup> --name <MyVM>
     
-    1b-4. Convert to a managed disk
-    az vm convert --resource-group <myResourceGroup> --name <MyVM>
+        1b-4. Convert to a managed disk
+        az vm convert --resource-group <myResourceGroup> --name <MyVM>
     
-    1b-5. Restart the VM
-    az vm start --resource-group <myResourceGroup> --name <MyVM>
+        1b-5. Restart the VM
+        az vm start --resource-group <myResourceGroup> --name <MyVM>
     
 2. Remote Desktop (or SSH) to the VM's public IP address to customize the image.
    You may need to remove firewall ports that block the RDP (3389) or SSH (22) ports.
