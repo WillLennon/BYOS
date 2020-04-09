@@ -1,10 +1,8 @@
-How to create a VMSS with a custom OS disk size and custom OS image.
-More details can be found in documents here:
-   https://docs.microsoft.com/en-us/azure/virtual-machines/windows/expand-os-disk#expand-the-volume-within-the-os
+Examples to create a VMSS with a custom OS disk size of 200gb and custom OS image.
 
-1. Create a VM with capacity for 200GB OS drive.  In this example create a Windows image
+1. Create a VM with capacity for 200GB OS drive. In this example, use a publicly available Windows 2019 image:
     az vm create --resource-group <myResourceGroup> --name <MyVM> --image Win2019DataCenter --os-disk-size-gb 200  --admin-username myUserName --admin-password myPassword
-
+    
 2. Remote Desktop to the VM's public IP address to customize the image.
 
    2a. [Optional, Windows] Extend the OS disk size to your specified disk size
