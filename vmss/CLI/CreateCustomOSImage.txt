@@ -20,21 +20,19 @@ More details can be found in documents here:
        [Windows] From an admin console window, run: C:\Windows\System32\sysprep\sysprep.exe /generalize /oobe /shutdown
        [Linux] sudo waagent -deprovision+user -force
        
-   VERY IMPORTANT: Wait for the VM to finish generalization and shutdown the VM! Allow 30 minutes.
-
-3. Stop the VM
-     az vm stop --resource-group <myResourceGroup> --name <MyVM>
-
-4. Deallocate the VM
+   VERY IMPORTANT! Wait for the VM to finish generalization and shutdown the VM! Allow 30+ minutes.
+   Do not proceed until the VM is stopped.
+   
+3. Deallocate the VM
      az vm deallocate --resource-group <myResourceGroup> --name <MyVM>
      
-5. Mark the VM as Generalized:
+4. Mark the VM as Generalized:
      az vm generalize --resource-group <myResourceGroup> --name <MyVM>
 
-6. Create a VM Image based on the generalized image:
+5. Create a VM Image based on the generalized image:
      az image create  --resource-group <myResourceGroup> --name <MyImage> --source <MyVM>
 
-7. Create the scaleset based on the custom VM image:
-     az vmss create --resource-group <myResourceGroup> --name <myScaleSet> --image <MyImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 1 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
+6. Create the scaleset based on the custom VM image:
+     az vmss create --resource-group <myResourceGroup> --name <myScaleSet> --image <MyImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
      
-8.  Verify the VM created in the scaleset comes online and reaches the Succeeded state
+7.  Verify that both VMs created in the scaleset come online, have different names,  and reach the Succeeded state
