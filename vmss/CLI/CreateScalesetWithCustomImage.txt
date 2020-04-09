@@ -1,10 +1,6 @@
-These are steps to create a Azure Scaleset with a custom OS disk size of 200gb and install software of your choosing.  Once your scaleset is created you can use it as an Azure DevOps Elastic Agent Pool.
+These are steps to create an Azure Scaleset with a custom OS disk size and custom software. Follow these steps to create a scaleset suitable for use as an Azure DevOps Elastic Agent Pool.
 
-If you just want to create a scaleset with the default 128GiB OS disk using a publicly available Azure image, then skip straight to Step 6 and use the public image name (UbuntuLTS, Win2019DataCenter, etc) to create the scaleset.
-
-If you don't want to change the software, but not the disk size, then omit the --os-disk-size-gb parameter and skip the steps to run DiskPart.
-
-If you want to extend the OS disk space beyond 128GiB and want to customize the software on your image, follow these steps.
+If you just want to create a scaleset with the default 128GiB OS disk using a publicly available Azure image, then skip straight to Step 6 and use the public image name (UbuntuLTS, Win2019DataCenter, etc) to create the scaleset.  Otherwise follow these steps to customize your VM image.
 
 1.  Create a VM with capacity for 200GiB OS drive starting with your base image:
     1a. If starting with an available Azure Image, for example <myBaseImage> = (Win2019DataCenter, UbuntuLTS):
@@ -59,4 +55,4 @@ If you want to extend the OS disk space beyond 128GiB and want to customize the 
      
 7. Verify that both VMs created in the scaleset come online, have different names, and reach the Succeeded state
 
-8. You are now ready to create an Azure DevOps Elastic Agent Pool with your ScaleSet
+You are now ready to create an Azure DevOps Elastic Agent Pool with your ScaleSet!
