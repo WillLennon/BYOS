@@ -1,0 +1,7 @@
+To create an image from a generalized VHD:
+
+az image create --resource-group <myResourceGroup> --source <myVhdUrl> --os-type <linux/windows> --name <myImage>
+
+then create the scaleset from that image:
+
+az vmss create --resource-group <myResourceGroup> --name <myScalesetName> --image <myImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 1 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
