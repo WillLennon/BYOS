@@ -1,7 +1,16 @@
 To create an image from a generalized VHD:
 
-az image create --resource-group <myResourceGroup> --source <myVhdUrl> --os-type <linux/windows> --name <myImage>
+1. First copy the VHD to your own storage account.  Make sure your storage account is in the resource group you want your scaleset.
+   IMPORTANT: On Windows, The SAS token needs to be wrapped in both single quotes and double quotes: ' "<token> " ' 
+   Blob copy takes about 8 hours.
+   
+   az storage blob copy start --destination-blob <myVhd> --destination-container <myContainer> --account-name <myStorageAccountName> --source-uri <sourceVhdUrl> --source-sas '"<sas token>"'
 
-then create the scaleset from that image:
+2. Once the VHD is in your resource group's storage account.
 
-az vmss create --resource-group <myResourceGroup> --name <myScalesetName> --image <myImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 1 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
+   az image create --resource-group <myResourceGroup> --source <myVhdUrl> --os-type <linux/windows> --name <myImage>
+
+3. Create the scaleset from your image:
+   IMPORTANT: On Windows, The load balancer parameter needs to be both single quotes and double quotes: ' " " ' 
+   
+    az vmss create --resource-group <myResourceGroup> --name <myScalesetName> --image <myImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
