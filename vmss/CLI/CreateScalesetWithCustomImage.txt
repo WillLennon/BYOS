@@ -65,7 +65,7 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
        VERY IMPORTANT! Wait for the Windows VM to finish generalization and shutdown.
        DO NOT PROCEED UNTIL THE VM HAS STOPPED. Allow 60 minutes.
    
-3. Generalize the VM Image.  This process makes the VM non-functional so delete it as well.
+3. Generate the VM Image.  The generalization process makes the VM non-functional so delete the VM.
      az vm deallocate --resource-group $resourceGroup --name $vmName
      az vm generalize --resource-group $resourceGroup --name $vmName
      az image create  --resource-group $resourceGroup --name $imageName --source $vmName
