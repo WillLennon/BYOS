@@ -57,7 +57,7 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
 
    2c. Reboot the VM when finished with customizations
    
-   2d. Generalize the VM.  
+   2d. Generalize the VM. Connect to the VM and run this command:
        [Linux] sudo waagent -deprovision+user -force
        Exit shell when the command finishes
        
