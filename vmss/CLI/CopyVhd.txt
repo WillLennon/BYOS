@@ -1,0 +1,20 @@
+To create an image from a generalized VHD, you must copy the VHD to your own storage account.  Make sure your storage account is in the resource group you want your scaleset.  Run this command from Powershell:
+
+    az storage blob copy start --destination-blob <myVhd> --destination-container <myContainer> --account-name <myStorageAccountName> --source-uri <sourceVhdUrl> --source-sas '"<sas token>"'
+   
+NOTE 1: On Windows Powershell, The SAS token needs to be wrapped in both single quotes and double quotes as show above.
+NOTE 2: Blob copy takes about 8 hours.
+NOTE 3: If you are given a URL that contains both the VHD URL and the SAS token, split them at the ? character.  For example, this full URL:
+
+https://thestore.blob.core.windows.net/vhds/AzP.20200101.ubuntu18.2.vhd?sv=2019-07-07&sktid=123456789-1234-1234-1234-1234567890ab&skt=2020-04-14&skv=2019-07-07&sig=1234567890ABCDEF%3D
+
+.. maps to these parameters:
+<sourceVhdUrl> = https://thestore.blob.core.windows.net/vhds/AzP.20200406.ubuntu18.2.vhd
+<sas token> = sv=2019-07-07&sktid=123456789-1234-1234-1234-1234567890ab&skt=2020-04-14&skv=2019-07-07&sig=1234567890ABCDEF%3D
+
+You can monitor the blob copy from the AZ CLI:
+
+    az storage blob show -container <myContainer> -name <myVhd> --account-name <myStorageAccountName>
+
+Once the VHD is in your resource group's storage account, follow the steps here to customize the OS image and create your Azure Scaleset:
+   https://github.com/WillLennon/BYOS/blob/master/vmss/CLI/CreateScalesetWithCustomImage.txt
