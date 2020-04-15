@@ -10,28 +10,39 @@ Open Powershell and login to your Azure subscription:
 Set your subscription:
    az account show
    az account set -subscription <Subscription Name or Id>
- 
+
+Set the following Powershell variables:
+
+$resourceGroup = ''  # Your Azure Resource Group to put your scaleset and other resources
+$vmName = ''         # The name of your temporary VM to customize
+$diskSizeGb = 128    # desired size of the OS disk.  128 Gb is the default
+$adminUserName = ''  # administrator user name
+$adminPassword = ''  # administrator password. Must be 12+ characters.
+$imageName = ''      # Name of the customized VM image this document helps create
+$scaleSetName = ''   # Name of the Azure VM Scaleset this document helps create
+
+# If using a base public image from the Azure gallery:
+$baseImageName = ''  # Name from Azure's public gallery. Ex: Win2019DataCenter, UbuntuLTS
+
+# If using a custom Vhd image:
+$storageAccount = '' # Azure storage account for Vhds
+$vhdUrl = ''         # URL to Vhd in your local storage account.
+$osType = ''         # OS Type of custom Vhd. Windows or Linux
 
 1.  Create a VM starting with your base image.  By default <myDiskSize> == 128 Gb.
     1a. If starting with an available Azure Image, for example <myBaseImage> = (Win2019DataCenter, UbuntuLTS):
-        az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myBaseImage> --os-disk-size-gb <myDiskSize>  --admin-username myUserName --admin-password myPassword
+        az vm create --resource-group $resourceGroup --name $vmName --image $baseImageName $baseImageName --os-disk-size-gb $diskSizeGb  --admin-username $adminUsername --admin-password $adminPassword
     
-    1b. If using a generalized VHD, the VHD must exist in your storage account.  If the VHD is elsewhere, follow this doc to copy the VHD to your storage account before proceeding: https://github.com/WillLennon/BYOS/blob/master/vmss/CLI/CopyVhd.txt
+    1b. If using a generalized VHD, the VHD must be in your storage account.  If the VHD is elsewhere, follow this doc to copy the VHD to your storage account before proceeding: https://github.com/WillLennon/BYOS/blob/master/vmss/CLI/CopyVhd.txt
     
-        1b-1. Create the VM with an unmanaged disk of the desired size and then convert to a managed disk:
-        az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myVhdUrl> --os-type windows --os-disk-size-gb <myDiskSize> --use-unmanaged-disk --admin-username <myUserName> --admin-password <myPassword> --storage-account <myVhdStorageAccount>
+        1b-1. Create the VM with with the custom vhd
+        az vm create --resource-group $resourceGroup --name $vmName --image $vhdUrl --os-type $osType --os-disk-size-gb $diskSizeGb --use-unmanaged-disk --admin-username $adminUsername --admin-password $adminPassword --storage-account $storageAccount
 
-        1b-2. Shutdown the VM
-        az vm shutdown --resource-group <myResourceGroup> --name <MyVM>
-
-        1b-3. Deallocate the VM
-        az vm deallocate --resource-group <myResourceGroup> --name <MyVM>
-    
-        1b-4. Convert to a managed disk
-        az vm convert --resource-group <myResourceGroup> --name <MyVM>
-    
-        1b-5. Restart the VM
-        az vm start --resource-group <myResourceGroup> --name <MyVM>
+        1b-2. Convert the VM's OS disk to a managed disk
+        az vm stop --resource-group $resourceGroup --name $vmName
+        az vm deallocate --resource-group $resourceGroup --name $vmName
+        az vm convert --resource-group $resourceGroup --name $vmName
+        az vm start --resource-group $resourceGroup --name $vmName
     
 2. Remote Desktop (or SSH) to the VM's public IP address to customize the image.
    You may need to open ports in the firewall to unblock the RDP (3389) or SSH (22) ports.
@@ -54,17 +65,20 @@ Set your subscription:
    DO NOT PROCEED UNTIL THE VM HAS STOPPED. Allow 60 minutes.
    
 3. Deallocate the VM
-     az vm deallocate --resource-group <myResourceGroup> --name <MyVM>
+     az vm deallocate --resource-group $resourceGroup --name $vmName
      
 4. Mark the VM as Generalized:
-     az vm generalize --resource-group <myResourceGroup> --name <MyVM>
+     az vm generalize --resource-group $resourceGroup --name $vmName
 
 5. Create a VM Image based on the generalized image:
-     az image create  --resource-group <myResourceGroup> --name <MyImage> --source <MyVM>
+     az image create  --resource-group $resourceGroup --name $imageName --source $vmName
 
 6. Create the scaleset based on the custom VM image:
-     az vmss create --resource-group <myResourceGroup> --name <myScaleSet> --image <MyImage> --admin-username <myUsername> --admin-password <myPassword> --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
+     az vmss create --resource-group $resourceGroup --name $scaleSetName --image $imageName --admin-username $adminUsername --admin-password $adminPassword --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
      
 7. Verify that both VMs created in the scaleset come online, have different names, and reach the Succeeded state
 
-You are now ready to create an Azure DevOps Elastic Agent Pool with your ScaleSet!
+8. Delete the temporary VM you created above.  It's not functional after its image was generalized above.
+     az vm delete --resource-group $resourceGroup --name $vmName
+
+Navigate to your Azure DevOps account to create you Elastic Agent Pool!
