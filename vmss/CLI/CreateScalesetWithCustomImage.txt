@@ -14,7 +14,7 @@ Set your subscription:
 Set the following Powershell variables:
 
 $resourceGroup = ''  # Your Azure Resource Group to put your scaleset and other resources
-$vmName = ''         # The name of your temporary VM to customize
+$vmName = 'tempVM'   # The name of your temporary VM to customize
 $diskSizeGb = 128    # desired size of the OS disk.  128 Gb is the default
 $adminUserName = ''  # administrator user name
 $adminPassword = ''  # administrator password. Must be 12+ characters.
