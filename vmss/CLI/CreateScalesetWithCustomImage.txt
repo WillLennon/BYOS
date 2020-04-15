@@ -12,14 +12,14 @@ Set your subscription:
    az account set -subscription <Subscription Name or Id>
  
 
-1.  Create a VM with capacity for 200GiB OS drive starting with your base image:
+1.  Create a VM starting with your base image.  By default <myDiskSize> == 128 Gb.
     1a. If starting with an available Azure Image, for example <myBaseImage> = (Win2019DataCenter, UbuntuLTS):
-        az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myBaseImage> --os-disk-size-gb 200  --admin-username myUserName --admin-password myPassword
+        az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myBaseImage> --os-disk-size-gb <myDiskSize>  --admin-username myUserName --admin-password myPassword
     
     1b. If using a generalized VHD, the VHD must exist in your storage account.  If the VHD is elsewhere, follow this doc to copy the VHD to your storage account before proceeding: https://github.com/WillLennon/BYOS/blob/master/vmss/CLI/CopyVhd.txt
     
         1b-1. Create the VM with an unmanaged disk of the desired size and then convert to a managed disk:
-        az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myVhdUrl> --os-type windows --os-disk-size-gb 200 --use-unmanaged-disk --admin-username <myUserName> --admin-password <myPassword> --storage-account <myVhdStorageAccount>
+        az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myVhdUrl> --os-type windows --os-disk-size-gb <myDiskSize> --use-unmanaged-disk --admin-username <myUserName> --admin-password <myPassword> --storage-account <myVhdStorageAccount>
 
         1b-2. Shutdown the VM
         az vm shutdown --resource-group <myResourceGroup> --name <MyVM>
@@ -36,11 +36,11 @@ Set your subscription:
 2. Remote Desktop (or SSH) to the VM's public IP address to customize the image.
    You may need to open ports in the firewall to unblock the RDP (3389) or SSH (22) ports.
 
-   2a. [Windows] Extend the OS disk size to fill the disk size you declared above.
+   2a. [Windows] If desired, extend the OS disk size to fill the disk size you declared above.
        Open DiskPart tool as administrator and run these DiskPart commands:
           list volume  (to see the volumes)
           select volume 2 (depends on which volume is the OS drive)
-          extend size 72000 (to extend the drive by 72 GiB, from 128GiB to 200GiB)
+          extend size 72000 (for example, to extend the drive by 72 GiB, from 128GiB to 200GiB)
           
    2b. Install any additional software on the VM
 
