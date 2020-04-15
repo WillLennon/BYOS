@@ -39,7 +39,6 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
         az vm create --resource-group $resourceGroup --name $vmName --image $vhdUrl --os-type $osType --os-disk-size-gb $diskSizeGb --use-unmanaged-disk --admin-username $adminUsername --admin-password $adminPassword --storage-account $storageAccount
 
         1b-2. Convert the VM's OS disk to a managed disk
-        $errorActionPreference = 'Stop'
         az vm stop --resource-group $resourceGroup --name $vmName
         az vm deallocate --resource-group $resourceGroup --name $vmName
         az vm convert --resource-group $resourceGroup --name $vmName
@@ -59,14 +58,14 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
    2c. Reboot the VM when finished with customizations
    
    2d. Generalize the VM.  
-       [Windows] From an admin console window: C:\Windows\System32\sysprep\sysprep.exe /generalize /oobe /shutdown
        [Linux] sudo waagent -deprovision+user -force
+       Exit shell when the command finishes
        
-   VERY IMPORTANT! Wait for the VM to finish generalization and shutdown the VM!
-   DO NOT PROCEED UNTIL THE VM HAS STOPPED. Allow 60 minutes.
+       [Windows] From an admin console window: C:\Windows\System32\sysprep\sysprep.exe /generalize /oobe /shutdown
+       VERY IMPORTANT! Wait for the Windows VM to finish generalization and shutdown.
+       DO NOT PROCEED UNTIL THE VM HAS STOPPED. Allow 60 minutes.
    
 3. Generalize the VM Image.  This process makes the VM non-functional so delete it as well.
-     $errorActionPreference = 'Stop'
      az vm deallocate --resource-group $resourceGroup --name $vmName
      az vm generalize --resource-group $resourceGroup --name $vmName
      az image create  --resource-group $resourceGroup --name $imageName --source $vmName
