@@ -48,7 +48,7 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
 2. Remote Desktop (or SSH) to the VM's public IP address to customize the image.
    You may need to open ports in the firewall to unblock the RDP (3389) or SSH (22) ports.
 
-   2a. [Windows] If desired, extend the OS disk size to fill the disk size you declared above.
+   2a. [Windows] If $diskSizeGB > 128, extend the OS disk partition to fill the disk.
        Open DiskPart tool as administrator and run these DiskPart commands:
           list volume  (to see the volumes)
           select volume 2 (depends on which volume is the OS drive)
