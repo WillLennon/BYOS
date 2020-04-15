@@ -2,11 +2,24 @@ These are steps to create an Azure Scaleset with a custom OS disk size and custo
 
 If you just want to create a scaleset with the default 128GiB OS disk using a publicly available Azure image, then skip straight to Step 6 and use the public image name (UbuntuLTS, Win2019DataCenter, etc) to create the scaleset.  Otherwise follow these steps to customize your VM image.
 
+
+Prerequisites:
+Install Azure CLI:
+   https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
+Open Powershell and login to your Azure subscription:
+   az login
+Set your subscription:
+   az account show
+   az account set -subscription <Subscription Name or Id>
+ 
+
 1.  Create a VM with capacity for 200GiB OS drive starting with your base image:
     1a. If starting with an available Azure Image, for example <myBaseImage> = (Win2019DataCenter, UbuntuLTS):
         az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myBaseImage> --os-disk-size-gb 200  --admin-username myUserName --admin-password myPassword
     
-    1b. If starting with a generalized VHD, first create the VM with an unmanaged disk of the desired size and then convert to a managed disk:
+    1b. If using a generalized VHD, the VHD must exist in your storage account.  If the VHD is elsewhere, follow this doc to copy the VHD to your storage account before proceeding: https://github.com/WillLennon/BYOS/blob/master/vmss/CLI/CopyVhd.txt
+    
+        1b-1. Create the VM with an unmanaged disk of the desired size and then convert to a managed disk:
         az vm create --resource-group <myResourceGroup> --name <MyVM> --image <myVhdUrl> --os-type windows --os-disk-size-gb 200 --use-unmanaged-disk --admin-username <myUserName> --admin-password <myPassword> --storage-account <myVhdStorageAccount>
 
         1b-2. Shutdown the VM
