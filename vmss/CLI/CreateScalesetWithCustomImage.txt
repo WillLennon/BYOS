@@ -29,11 +29,11 @@ $storageAccount = '' # Azure storage account for Vhds
 $vhdUrl = ''         # URL to Vhd in your local storage account.
 $osType = ''         # OS Type of custom Vhd. Windows or Linux
 
-1.  Create a VM starting with your base image.  By default <myDiskSize> == 128 Gb.
-    1a. If starting with an available Azure Image, for example <myBaseImage> = (Win2019DataCenter, UbuntuLTS):
+1.  Create a VM starting with your base image.
+    1a. If starting with a published Azure image:
         az vm create --resource-group $resourceGroup --name $vmName --image $baseImageName $baseImageName --os-disk-size-gb $diskSizeGb  --admin-username $adminUsername --admin-password $adminPassword
     
-    1b. If using a generalized VHD, the VHD must be in your storage account.  If the VHD is elsewhere, follow this doc to copy the VHD to your storage account before proceeding: https://github.com/WillLennon/BYOS/blob/master/vmss/CLI/CopyVhd.txt
+    1b. If using a custom VHD, the VHD must be in your storage account.  If the VHD is elsewhere, follow this doc to copy the VHD to your storage account before proceeding: https://github.com/WillLennon/BYOS/blob/master/vmss/CLI/CopyVhd.txt
     
         1b-1. Create the VM with with the custom vhd
         az vm create --resource-group $resourceGroup --name $vmName --image $vhdUrl --os-type $osType --os-disk-size-gb $diskSizeGb --use-unmanaged-disk --admin-username $adminUsername --admin-password $adminPassword --storage-account $storageAccount
