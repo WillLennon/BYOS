@@ -39,6 +39,7 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
         az vm create --resource-group $resourceGroup --name $vmName --image $vhdUrl --os-type $osType --os-disk-size-gb $diskSizeGb --use-unmanaged-disk --admin-username $adminUsername --admin-password $adminPassword --storage-account $storageAccount
 
         1b-2. Convert the VM's OS disk to a managed disk
+        $errorActionPreference = 'Stop'
         az vm stop --resource-group $resourceGroup --name $vmName
         az vm deallocate --resource-group $resourceGroup --name $vmName
         az vm convert --resource-group $resourceGroup --name $vmName
@@ -64,21 +65,16 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
    VERY IMPORTANT! Wait for the VM to finish generalization and shutdown the VM!
    DO NOT PROCEED UNTIL THE VM HAS STOPPED. Allow 60 minutes.
    
-3. Deallocate the VM
+3. Generalize the VM Image.  This process makes the VM non-functional so delete it as well.
+     $errorActionPreference = 'Stop'
      az vm deallocate --resource-group $resourceGroup --name $vmName
-     
-4. Mark the VM as Generalized:
      az vm generalize --resource-group $resourceGroup --name $vmName
-
-5. Create a VM Image based on the generalized image:
      az image create  --resource-group $resourceGroup --name $imageName --source $vmName
-
-6. Create the scaleset based on the custom VM image:
+     az vm delete --resource-group $resourceGroup --name $vmName 
+     
+4. Create the scaleset based on the custom VM image:
      az vmss create --resource-group $resourceGroup --name $scaleSetName --image $imageName --admin-username $adminUsername --admin-password $adminPassword --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
      
-7. Verify that both VMs created in the scaleset come online, have different names, and reach the Succeeded state
-
-8. Delete the temporary VM you created above.  It's not functional after its image was generalized above.
-     az vm delete --resource-group $resourceGroup --name $vmName
+5. Navigate to portal.azure.com and verify that two VMs are created, have different names, and reach the Succeeded state.
 
 Navigate to your Azure DevOps account to create you Elastic Agent Pool!
