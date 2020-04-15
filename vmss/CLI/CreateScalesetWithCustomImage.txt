@@ -20,6 +20,7 @@ $adminUserName = ''  # administrator user name
 $adminPassword = ''  # administrator password. Must be 12+ characters.
 $imageName = ''      # Name of the customized VM image this document helps create
 $scaleSetName = ''   # Name of the Azure VM Scaleset this document helps create
+$vmSku = 'Standard_DS1_v2' # Size of VMs to use.  Default is Standard_DS1_v2 which is small.
 
 # If using a base public image from the Azure gallery:
 $baseImageName = ''  # Name from Azure's public gallery. Ex: Win2019DataCenter, UbuntuLTS
@@ -72,7 +73,7 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
      az vm delete --resource-group $resourceGroup --name $vmName 
      
 4. Create the scaleset based on the custom VM image:
-     az vmss create --resource-group $resourceGroup --name $scaleSetName --image $imageName --admin-username $adminUsername --admin-password $adminPassword --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
+     az vmss create --resource-group $resourceGroup --name $scaleSetName --image $imageName --admin-username $adminUsername --admin-password $adminPassword --vm-sku $vmSku --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --load-balancer '""'
      
 5. Navigate to portal.azure.com and verify that two VMs are created, have different names, and reach the Succeeded state.
 
