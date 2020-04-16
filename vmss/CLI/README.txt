@@ -3,7 +3,7 @@ Steps to create an Azure Virtual Machine Scale Set (VMSS) for use with Azure Dev
 1. Install the Azure CLI. Instructions are here:
    https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 
-2. Open Powershell and login to your Azure subscription:
+2. Open Powershell and login to Azure:
    az login
    
 3. Set your subscription:
