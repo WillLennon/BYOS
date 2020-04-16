@@ -10,7 +10,8 @@ Steps to create an Azure Virtual Machine Scale Set (VMSS) for use with Azure Dev
    az account show
    az account set --subscription <Subscription Name or Id>
 
-4. Follow the guidance in <> to create your Azure Virtual Machine ScaleSet
+4. Create your Azure Virtual Machine ScaleSet by following the guidance in      
+   https://github.com/WillLennon/BYOS/blob/master/vmss/CLI/CreateScalesetWithCustomImage.txt
 
 5. Navigate to your Azure DevOps account and click Add Pool to begin creating your Elastic Pool.
    https://dev.azure.com/<your account>/<your project>/_settings/agentqueues
