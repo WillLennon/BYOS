@@ -9,7 +9,7 @@ Open Powershell and login to your Azure subscription:
    az login
 Set your subscription:
    az account show
-   az account set -subscription <Subscription Name or Id>
+   az account set --subscription <Subscription Name or Id>
 
 Set the following Powershell variables:
 
