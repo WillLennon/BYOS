@@ -7,6 +7,11 @@ pool=$2
 pat=$3
 runArgs=$4
 
+# Create our user account
+echo creating AzDevOps account
+sudo useradd -m AzDevOps
+sudo usermod -a -G sudo AzDevOps
+
 # Create agent folder
 echo creating agent folder
 mkdir -p -v /agent
@@ -26,12 +31,9 @@ echo installing dependencies
 apt install at
 
 # configure the build agent
-# must set this variable so the build agent scripts don't complain that we're running as root
-export AGENT_ALLOW_RUNASROOT=1
-echo configuring build agent
-
 # calling bash here so the quotation marks around $pool get respected
-/bin/bash ./config.sh --unattended --url $url --pool "$pool" --auth pat --token $pat --acceptTeeEula --replace
+echo configuring build agent
+sudo runuser AzDevOps -c '/bin/bash ./config.sh --unattended --url $url --pool "$pool" --auth pat --token $pat --acceptTeeEula --replace'
 
 # schedule the build agent to run immediately
 /bin/bash ./runagent.sh $runArgs
