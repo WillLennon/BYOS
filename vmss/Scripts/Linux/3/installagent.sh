@@ -7,10 +7,6 @@ pool=$2
 pat=$3
 runArgs=$4
 
-echo url $url
-echo pool $pool
-echo pat $pat
-
 # Create our user account
 echo creating AzDevOps account
 sudo useradd -m AzDevOps
@@ -33,10 +29,6 @@ echo installing dependencies
 
 # install at to be used when we schedule the build agent to run later
 apt install at
-
-echo url $url
-echo pool $pool
-echo pat $pat
 
 # configure the build agent
 # calling bash here so the quotation marks around $pool get respected
