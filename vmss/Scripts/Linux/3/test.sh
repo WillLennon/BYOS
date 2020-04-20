@@ -11,15 +11,6 @@ echo url $url
 echo pool $pool
 echo pat $pat
 
-# Create our user account
-echo creating AzDevOps account
-sudo useradd -m AzDevOps
-sudo usermod -a -G sudo AzDevOps
-
-# Create agent folder
-echo creating agent folder
-mkdir -p -v /agent
-
 # Copy run script
 cp runagent.sh /agent/runagent.sh
 
