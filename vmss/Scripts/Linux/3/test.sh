@@ -17,6 +17,9 @@ cp runagent.sh /agent/runagent.sh
 cd /agent
 
 echo url $url
+echo url2 '$url'
+echo url3 "$url"
+
 echo pool $pool
 echo pat $pat
 
