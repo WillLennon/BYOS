@@ -7,6 +7,10 @@ pool=$2
 pat=$3
 runArgs=$4
 
+echo url $url
+echo pool $pool
+echo pat $pat
+
 # Create our user account
 echo creating AzDevOps account
 sudo useradd -m AzDevOps
