@@ -23,6 +23,8 @@ mkdir -p -v /agent
 # Copy run script
 cp runagent.sh /agent/runagent.sh
 
+cd /agent
+
 echo url $url
 echo pool $pool
 echo pat $pat
