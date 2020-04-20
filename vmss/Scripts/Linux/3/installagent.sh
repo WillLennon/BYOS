@@ -34,6 +34,10 @@ echo installing dependencies
 # install at to be used when we schedule the build agent to run later
 apt install at
 
+echo url $url
+echo pool $pool
+echo pat $pat
+
 # configure the build agent
 # calling bash here so the quotation marks around $pool get respected
 echo configuring build agent
