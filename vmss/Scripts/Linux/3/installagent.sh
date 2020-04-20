@@ -41,7 +41,7 @@ echo pat $pat
 # configure the build agent
 # calling bash here so the quotation marks around $pool get respected
 echo configuring build agent
-sudo runuser AzDevOps -c '/bin/bash ./config.sh --unattended --url $url --pool "$pool" --auth pat --token $pat --acceptTeeEula --replace'
+sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool "$pool" --auth pat --token $pat --acceptTeeEula --replace"
 
 # schedule the build agent to run immediately
 /bin/bash ./runagent.sh $runArgs
