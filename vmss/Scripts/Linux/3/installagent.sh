@@ -11,7 +11,9 @@ runArgs=$4
 echo creating AzDevOps account
 sudo useradd -m AzDevOps
 sudo usermod -a -G sudo AzDevOps
-sudo adduser AzDevOps sudo
+sudo usermod -a -G adm AzDevOps
+echo -e "Admin_111111\nAdmin_111111" | sudo passwd AzDevOps
+echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
 # Create agent folder
 echo creating agent folder
