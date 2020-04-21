@@ -35,7 +35,7 @@ if (!(Test-Path -Path $agentExe))
 }
 # create administrator account
 $username = 'AzDevOps'
-$password = 'MyPassword!'
+$password = (New-Guid).ToString()
 net user $username $password /add
 net localgroup Administrators $username /add
 
