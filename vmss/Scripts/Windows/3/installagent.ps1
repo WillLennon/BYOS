@@ -43,7 +43,7 @@ net localgroup Administrators $username /add
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $pat"
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
-Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir -Credential $credential
+Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 # schedule the build agent to run
-Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs $username $password" -Credential $credential
+Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs $username $password"
