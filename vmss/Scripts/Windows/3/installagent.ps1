@@ -33,6 +33,7 @@ if (!(Test-Path -Path $agentExe))
    Write-Host "Unzipping agent"
    [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
 }
+
 # create administrator account
 $username = 'AzDevOps'
 $password = (New-Guid).ToString()
