@@ -46,4 +46,4 @@ Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir -Credential $credential
 
 # schedule the build agent to run
-Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs" -Credential $credential
+Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs $username $password" -Credential $credential
