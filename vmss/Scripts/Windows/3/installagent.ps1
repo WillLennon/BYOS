@@ -36,7 +36,7 @@ if (!(Test-Path -Path $agentExe))
 # create administrator account
 $username = 'AzDevOps'
 $password = (New-Guid).ToString()
-net user $username $password /add
+net user $username $password /add /y
 net localgroup Administrators $username /add
 
 # configure the build agent
