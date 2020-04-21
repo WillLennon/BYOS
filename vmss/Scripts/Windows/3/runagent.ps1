@@ -7,7 +7,7 @@ param
 $start1 = (Get-Date).AddSeconds(15)
 $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
 $cmd1 = New-ScheduledTaskAction -Execute "C:\agent\run.cmd" -WorkingDirectory "C:\agent" $runArgs
-Register-ScheduledTask -TaskName "BuildAgent" -User System -Trigger $time1 -Action $cmd1 -Force
+Register-ScheduledTask -TaskName "BuildAgent" -User AzDevOps -Trigger $time1 -Action $cmd1 -Force
 
 # delete the status folder from custom script extension directory
 $start2 = (Get-Date).AddSeconds(15)
