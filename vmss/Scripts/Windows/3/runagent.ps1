@@ -1,9 +1,14 @@
 param
 (
-   [string]$runArgs,
-   [string]$username,
-   [string]$password
+   [string]$runArgs
 )
+
+# create administrator account
+$username = 'AzDevOps'
+$password = (New-Guid).ToString()
+net user $username /delete
+net user $username $password /add /y
+net localgroup Administrators $username /add
 
 # schedule the build agent to run
 $start1 = (Get-Date).AddSeconds(15)
