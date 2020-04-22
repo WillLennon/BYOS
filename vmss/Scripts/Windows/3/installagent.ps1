@@ -34,13 +34,6 @@ if (!(Test-Path -Path $agentExe))
    [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
 }
 
-# create administrator account
-$username = 'AzDevOps'
-$password = (New-Guid).ToString()
-net user $username /delete
-net user $username $password /add /y
-net localgroup Administrators $username /add
-
 # configure the build agent
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $pat"
 $config = $agentConfig + $configParameters
@@ -48,6 +41,4 @@ Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 # schedule the build agent to run
-Write-Host Starting agent
-$runParams = $runFileDest + " -runArgs '" + $runArgs + "' -username " + $username + " -password " + $password
-Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runParams"
+Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs"
