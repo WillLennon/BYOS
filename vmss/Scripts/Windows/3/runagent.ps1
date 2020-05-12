@@ -13,8 +13,8 @@ else
 
 $windows = Get-WindowsEdition -Online
 
-if ($windows.Edition -clike '*datacenter*' -or
-    $windows.Edition -clike '*server*' )
+if ($windows.Edition -like '*datacenter*' -or
+    $windows.Edition -like '*server*' )
 {
   # create administrator account
   $username = 'AzDevOps'
