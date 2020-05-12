@@ -3,7 +3,6 @@ param
    [string]$runArgs
 )
 
-
 # schedule the build agent to run
 $start1 = (Get-Date).AddSeconds(15)
 $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
@@ -13,7 +12,6 @@ else
 {  $cmd1 = New-ScheduledTaskAction -Execute "C:\agent\run.cmd" -WorkingDirectory "C:\agent" $runArgs }
 
 $windows = Get-WindowsEdition -Online
-$windows.Edition
 
 if ($windows.Edition -clike '*datacenter*' -or
     $windows.Edition -clike '*server*' )
