@@ -13,7 +13,8 @@ sudo useradd -m AzDevOps
 sudo usermod -a -G sudo AzDevOps
 sudo usermod -a -G adm AzDevOps
 
-if [ "$(getent group docker)" ]; then
+docker='getent group docker'
+if ($docker); then
    echo granting docker access
    usermod -a -G docker AzDevOps
 fi
