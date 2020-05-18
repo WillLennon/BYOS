@@ -12,7 +12,21 @@ echo creating AzDevOps account
 sudo useradd -m AzDevOps
 sudo usermod -a -G sudo AzDevOps
 sudo usermod -a -G adm AzDevOps
-echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
+
+if [ "$(getent group docker)" ]; then
+   echo granting docker access
+   usermod -a -G docker AzDevOps
+fi
+
+echo "Giving AzDevOps user access to the '/home', '/usr/share', and '/opt' directories."
+sudo chmod -R 777 /home
+setfacl -Rdm "u:AzDevOps:rwX" /home
+setfacl -Rb /home/AzDevOps
+sudo chmod -R 777 /usr/share
+setfacl -Rdm "u:AzDevOps:rwX" /usr/share
+sudo chmod -R 777 /opt
+setfacl -Rdm "u:AzDevOps:rwX" /opt
+echo "AzDevOps ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/"AzDevOps"
 
 # Create agent folder
 echo creating agent folder
