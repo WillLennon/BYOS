@@ -12,11 +12,7 @@ echo creating AzDevOps account
 sudo useradd -m AzDevOps
 sudo usermod -a -G sudo AzDevOps
 sudo usermod -a -G adm AzDevOps
-
-hasdocker='getent group docker'
-if ($hasdocker); then
-   usermod -a -G docker AzDevOps
-fi
+sudo usermod -a -G docker AzDevOps
 
 echo "Giving AzDevOps user access to the '/home', '/usr/share', and '/opt' directories."
 sudo chmod -R 777 /home
