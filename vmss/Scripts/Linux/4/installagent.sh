@@ -22,7 +22,7 @@ sudo chmod -R 777 /usr/share
 setfacl -Rdm "u:AzDevOps:rwX" /usr/share
 sudo chmod -R 777 /opt
 setfacl -Rdm "u:AzDevOps:rwX" /opt
-echo "AzDevOps ALL=(ALL) NOPASSWD:ALL" | tee /etc/sudoers.d/"AzDevOps"
+echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
 # Create agent folder
 echo creating agent folder
