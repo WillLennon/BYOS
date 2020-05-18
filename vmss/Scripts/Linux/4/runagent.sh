@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#delete the script folder
+#delete the script folder TESTING ONLY
 #rm -rf "/var/lib/waagent/custom-script"
 
 #pass any input argument to the run script
