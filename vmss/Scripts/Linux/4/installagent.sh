@@ -14,14 +14,14 @@ sudo usermod -a -G sudo AzDevOps
 sudo usermod -a -G adm AzDevOps
 sudo usermod -a -G docker AzDevOps
 
-echo "Giving AzDevOps user access to the '/home', '/usr/share', and '/opt' directories."
-sudo chmod -R 777 /home
-setfacl -Rdm "u:AzDevOps:rwX" /home
-setfacl -Rb /home/AzDevOps
-sudo chmod -R 777 /usr/share
-setfacl -Rdm "u:AzDevOps:rwX" /usr/share
-sudo chmod -R 777 /opt
-setfacl -Rdm "u:AzDevOps:rwX" /opt
+echo "Giving AzDevOps user access to the '/home', '/usr/share', and '/opt' directories."
+sudo chmod -R 777 /home
+setfacl -Rdm "u:AzDevOps:rwX" /home
+setfacl -Rb /home/AzDevOps
+sudo chmod -R 777 /usr/share
+setfacl -Rdm "u:AzDevOps:rwX" /usr/share
+sudo chmod -R 777 /opt
+setfacl -Rdm "u:AzDevOps:rwX" /opt
 echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
 # Create agent folder
