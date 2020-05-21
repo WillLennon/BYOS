@@ -84,13 +84,13 @@ if (Test-Path -Path $warmup)
       # This is wonky.  
       # We want to run powershell both elevated and as the local admin, but Powershell won't let you do both -Credential and -Verb.
       # So start a process as the local admin and then have that process start another elevated process that runs the warmup script.
-      Start-Process powershell.exe -Credential $credential -Wait -ArgumentList "Start-Process powershell.exe -ArgumentList $warmup -Verb RunAs"
+      Start-Process powershell.exe -Credential $credential -Wait -ArgumentList "Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -Wait -Verb RunAs"
    }
    else
    {
       # run as system
       echo runassystem > c:\runassystem.txt
-      Start-Process powershell.exe -Wait -ArgumentList $warmup -Verb runas
+      Start-Process powershell.exe -Wait -ArgumentList $warmup -Verb RunAs
    }
 }
 
