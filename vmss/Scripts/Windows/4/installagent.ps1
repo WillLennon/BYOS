@@ -64,13 +64,12 @@ if ((Test-Path -Path $warmup))
       # run as local admin
       $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
       $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-      Write-Host "Running " $warmup " as " $username
       Start-Process -FilePath $warmup -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory "\" -Credential $credential
    }
    else
    {
       # run as system
-      Write-Host "Running " $warmup " as system"
+      echo runassystem > runassystem.txt
       Start-Process -FilePath $warmup -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory "\"
    }
 }
