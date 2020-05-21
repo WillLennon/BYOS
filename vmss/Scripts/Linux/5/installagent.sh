@@ -47,7 +47,7 @@ apt install at
 # Run any user warmup script if it exists.
 # This must be done before we configure the agent because once the agent registers with Azure DevOps
 # We are only given 5 minutes between registering and starting the agent before Azure DevOps tears down the VM.
-warmup='~/warmup.sh'
+warmup='/warmup.sh'
 if test -f "$warmup"; then
     echo "Executing $warmup"
     chmod +x $warmup
