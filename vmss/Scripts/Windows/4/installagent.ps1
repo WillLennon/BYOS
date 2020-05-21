@@ -34,6 +34,14 @@ if (!(Test-Path -Path $agentExe))
    [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
 }
 
+# run the customer warmup script if it exists
+$warmup = "\warmup.ps1"
+if (!(Test-Path -Path $warmup))
+{
+   Write-Host "Running " $warmup
+   Start-Process -FilePath $warmup -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory "\"
+}
+
 # configure the build agent
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $pat"
 $config = $agentConfig + $configParameters
