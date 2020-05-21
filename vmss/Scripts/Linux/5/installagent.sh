@@ -42,18 +42,20 @@ echo installing dependencies
 # install at to be used when we schedule the build agent to run later
 apt install at
 
-# configure the build agent
-# calling bash here so the quotation marks around $pool get respected
-echo configuring build agent
-sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $pat --acceptTeeEula --replace"
-
-# run any user warmup script if it exists
+# Run any user warmup script if it exists.
+# This must be done before we configure the agent because once the agent registers with Azure DevOps
+# We are only given 5 minutes between registering and starting the agent before Azure DevOps tears down the VM.
 warmup='~/warmup.sh'
 if test -f "$warmup"; then
     echo "Executing $warmup"
     chmod +x $warmup
     sudo runuser AzDevOps -c "/bin/bash $warmup"
 fi
+
+# configure the build agent
+# calling bash here so the quotation marks around $pool get respected
+echo configuring build agent
+sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $pat --acceptTeeEula --replace"
 
 # schedule the build agent to run immediately
 /bin/bash ./runagent.sh $runArgs
