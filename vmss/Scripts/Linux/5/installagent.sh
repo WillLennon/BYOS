@@ -47,6 +47,14 @@ apt install at
 echo configuring build agent
 sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $pat --acceptTeeEula --replace"
 
+# run any user warmup script if it exists
+warmup='~/warmup.sh'
+if test -f "$warmup"; then
+    echo "Executing $warmup"
+    chmod +x $warmup
+    sh $warmup
+fi
+
 # schedule the build agent to run immediately
 /bin/bash ./runagent.sh $runArgs
 
