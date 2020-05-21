@@ -90,7 +90,7 @@ if (Test-Path -Path $warmup)
    {
       # run as system
       echo runassystem > c:\runassystem.txt
-      Start-Process powershell.exe -Wait -ArgumentList $warmup -Verb RunAs
+      Start-Process powershell.exe -Wait -ArgumentList $warmup -WorkingDirectory '\' -Verb RunAs
    }
 }
 
