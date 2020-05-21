@@ -52,7 +52,7 @@ warmup='~/warmup.sh'
 if test -f "$warmup"; then
     echo "Executing $warmup"
     chmod +x $warmup
-    sh $warmup
+    sudo runuser AzDevOps -c "/bin/bash $warmup"
 fi
 
 # schedule the build agent to run immediately
