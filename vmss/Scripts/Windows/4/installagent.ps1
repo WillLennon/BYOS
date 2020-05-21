@@ -27,6 +27,12 @@ $runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
 $runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
 Copy-item $runFileSource $runFileDest
 
+# testing
+$installFile = "installagent.ps1"
+$installFileSource = Get-ChildItem -Path .\* -Recurse -Include $installFile
+$installFileDest = Join-Path -Path $agentDir -ChildPath $installFile
+Copy-item $installFileSource $installFileDest
+
 #unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
 {
@@ -44,7 +50,7 @@ if ($windows.Edition -like '*datacenter*' -or
 {
   $username = 'AzDevOps'
   $password = (New-Guid).ToString()
-      echo $password > password.txt
+  echo $password > c:\password.txt
   net user $username /delete
   net user $username $password /add /y
   net localgroup Administrators $username /add
@@ -68,7 +74,7 @@ else
 $warmup = "\warmup.ps1"
 if (Test-Path -Path $warmup)
 {
-   echo fileexists > fileexists.txt
+   echo fileexists > c:\fileexists.txt
    if (![String]::IsNullOrEmpty($username) -and
        ![String]::IsNullOrEmpty($password))
    {
@@ -80,7 +86,7 @@ if (Test-Path -Path $warmup)
    else
    {
       # run as system
-      echo runassystem > runassystem.txt
+      echo runassystem > c:\runassystem.txt
       Start-Process powershell.exe -Wait -WorkingDirectory "\" -ArgumentList $warmup -Verb runas
    }
 }
