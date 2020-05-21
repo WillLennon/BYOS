@@ -34,6 +34,20 @@ if (!(Test-Path -Path $agentExe))
    [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
 }
 
+# create the local administrator account
+$username = $null
+$password = $null
+
+if ($windows.Edition -like '*datacenter*' -or
+    $windows.Edition -like '*server*' )
+{
+  $username = 'AzDevOps'
+  $password = (New-Guid).ToString()
+  net user $username /delete
+  net user $username $password /add /y
+  net localgroup Administrators $username /add
+}
+
 # run the customer warmup script if it exists
 $warmup = "\warmup.ps1"
 if (!(Test-Path -Path $warmup))
@@ -49,4 +63,4 @@ Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 # schedule the build agent to run
-Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs"
+Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs $username $password"
