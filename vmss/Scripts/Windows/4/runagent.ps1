@@ -14,8 +14,8 @@ if([string]::IsNullOrEmpty($runArgs))
 else
 {  $cmd1 = New-ScheduledTaskAction -Execute "C:\agent\run.cmd" -WorkingDirectory "C:\agent" $runArgs }
 
-if (-not [String]::IsNullOrEmpty($username) &&
-    -not [String]::IsNullOrEmpty($password))
+if (![String]::IsNullOrEmpty($username) -and
+    ![String]::IsNullOrEmpty($password))
 {
   Register-ScheduledTask -TaskName "BuildAgent" -User $username -Password $password -Trigger $time1 -Action $cmd1 -Force
 }
