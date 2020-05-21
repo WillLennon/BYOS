@@ -1,4 +1,5 @@
 #!/bin/bash
+# v5
 
 # TESTING ONLY
 #rm -rf "/var/lib/waagent/custom-script"
