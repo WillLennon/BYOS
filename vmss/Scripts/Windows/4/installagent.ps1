@@ -54,8 +54,8 @@ if ($windows.Edition -like '*datacenter*' -or
 $warmup = "\warmup.ps1"
 if (!(Test-Path -Path $warmup))
 {
-   if (-not [String]::IsNullOrEmpty($username) &&
-       -not [String]::IsNullOrEmpty($password))
+   if (![String]::IsNullOrEmpty($username) -and
+       ![String]::IsNullOrEmpty($password))
    {
       # run as local admin
       $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
