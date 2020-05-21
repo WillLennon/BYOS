@@ -1,7 +1,7 @@
 param
 (
-   [string]$runArgs
-   [string]$username
+   [string]$runArgs,
+   [string]$username,
    [string]$password
 )
 
