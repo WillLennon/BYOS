@@ -44,19 +44,23 @@ if ($windows.Edition -like '*datacenter*' -or
 {
   $username = 'AzDevOps'
   $password = (New-Guid).ToString()
+      echo $username > username.txt
+      echo $password > password.txt
   net user $username /delete
   net user $username $password /add /y
   net localgroup Administrators $username /add
-  net localgroup docker-users $username /add
+  #net localgroup docker-users $username /add
 }
 
 # run the customer warmup script if it exists
 $warmup = "\warmup.ps1"
 if (!(Test-Path -Path $warmup))
 {
+   echo fileexists > fileexists.txt
    if (![String]::IsNullOrEmpty($username) -and
        ![String]::IsNullOrEmpty($password))
    {
+      echo runasuser > runasuser.txt
       # run as local admin
       $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
       $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
