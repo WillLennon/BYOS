@@ -1,6 +1,8 @@
 param
 (
    [string]$runArgs
+   [string]$username
+   [string]$password
 )
 
 # v4
