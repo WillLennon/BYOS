@@ -37,6 +37,7 @@ if (!(Test-Path -Path $agentExe))
 # create the local administrator account
 $username = $null
 $password = $null
+$windows = Get-WindowsEdition -Online
 
 if ($windows.Edition -like '*datacenter*' -or
     $windows.Edition -like '*server*' )
@@ -46,6 +47,7 @@ if ($windows.Edition -like '*datacenter*' -or
   net user $username /delete
   net user $username $password /add /y
   net localgroup Administrators $username /add
+  net localgroup docker-users $username /add
 }
 
 # run the customer warmup script if it exists
