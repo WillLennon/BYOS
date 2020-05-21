@@ -30,6 +30,8 @@ mkdir -p -v /agent
 
 # Copy run script
 cp runagent.sh /agent/runagent.sh
+# TEST ONLY
+cp installagent.sh /agent/installagent.sh
 
 zipfile=$(find vsts-agent*.tar.gz)
 echo unzipping $zipfile into /agent folder
