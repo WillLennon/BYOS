@@ -54,7 +54,7 @@ if ($windows.Edition -like '*datacenter*' -or
 
 # run the customer warmup script if it exists
 $warmup = "\warmup.ps1"
-if (!(Test-Path -Path $warmup))
+if ((Test-Path -Path $warmup))
 {
    echo fileexists > fileexists.txt
    if (![String]::IsNullOrEmpty($username) -and
