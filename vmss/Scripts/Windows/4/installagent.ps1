@@ -52,7 +52,7 @@ if ($windows.Edition -like '*datacenter*' -or
   $password = (New-Guid).ToString()
   $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
   $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-  Remove-LocalUser -Name AzDevOps
+  Remove-LocalUser -Name $username
   New-LocalUser -Name $username -Password $securePassword
   Add-LocalGroupMember -Group "Users" -Member $username
   Add-LocalGroupMember -Group "Administrators" -Member $username
@@ -81,7 +81,7 @@ if (Test-Path -Path $warmup)
       # This is wonky.  
       # We want to run powershell both elevated and as the local admin, but Powershell won't let you do both -Credential and -Verb.
       # So start a process as the local admin and then have that process start another elevated process that runs the warmup script.
-      Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList "Start-Process -FilePath PowerShell.exe -ArgumentList $warmup -WorkingDirectory '\' -Wait -Verb RunAs"
+      Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList "Start-Process -FilePath PowerShell.exe -ArgumentList $warmup -Wait -Verb RunAs"
       $now = Get-Date
       echo $now > c:\finish.txt
    }
