@@ -45,8 +45,8 @@ $username = $null
 $password = $null
 $windows = Get-WindowsEdition -Online
 
-if ($windows.Edition -like '*datacenter*' -or
-    $windows.Edition -like '*server*' )
+#if ($windows.Edition -like '*datacenter*' -or
+#    $windows.Edition -like '*server*' )
 {
   $username = 'AzDevOps'
   $password = '*)Ns80nlsdfy89nL)' # (New-Guid).ToString()
