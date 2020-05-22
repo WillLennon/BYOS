@@ -61,11 +61,11 @@ $windows = Get-WindowsEdition -Online
     {
       Add-LocalGroupMember -Group "docker-users" -Member $username
     }
- # }
+  }
   
   # TEST run a process as this user to break it in.
   Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList "Echo hello > hello.txt"
-}
+#}
 
 # TEST disable powershell execution policy
 Set-ExecutionPolicy Unrestricted
