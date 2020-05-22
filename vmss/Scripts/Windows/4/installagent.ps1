@@ -28,10 +28,10 @@ $runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
 Copy-item $runFileSource $runFileDest
 
 # copy warmup script to the agent folder
-$warmupFile = "runwarmup.ps1"
-$warmupFileSource = Get-ChildItem -Path .\* -Recurse -Include $warmupFile
-$warmupFileDest = Join-Path -Path $agentDir -ChildPath $warmupFile
-Copy-item $runFileSource $warmupFileDest
+$runAsUserFile = "runasuser.ps1"
+$runAsUserFileSource = Get-ChildItem -Path .\* -Recurse -Include $runAsUserFile
+$runAsUserFileDest = Join-Path -Path $agentDir -ChildPath $runAsUserFile
+Copy-item $runAsUserFileSource $runAsUserFileDest
 
 # testing
 $installFile = "installagent.ps1"
@@ -79,5 +79,5 @@ Set-ExecutionPolicy Unrestricted
 # TEST disable UAC so the warmup script doesn't prompt when we elevate
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
 
-# run the rest of the script as the local user
+# run the rest of the script as the local user (unelevated)
 Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList $warmupFileDest
