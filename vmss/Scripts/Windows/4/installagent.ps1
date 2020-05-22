@@ -47,7 +47,7 @@ $windows = Get-WindowsEdition -Online
 
 #if ($windows.Edition -like '*datacenter*' -or
 #    $windows.Edition -like '*server*' )
-{
+#{
   $username = 'AzDevOps'
   $password = '*)Ns80nlsdfy89nL)' # (New-Guid).ToString()
   $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
@@ -61,7 +61,7 @@ $windows = Get-WindowsEdition -Online
     {
       Add-LocalGroupMember -Group "docker-users" -Member $username
     }
-  }
+ # }
   
   # TEST run a process as this user to break it in.
   Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList "Echo hello > hello.txt"
