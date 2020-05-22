@@ -75,9 +75,18 @@ if (Test-Path -Path $warmup)
       # This is wonky.  
       # We want to run powershell both elevated and as the local admin, but Powershell won't let you do both -Credential and -Verb.
       # So start a process as the local admin and then have that process start another elevated process that runs the warmup script.
-      Start-Process powershell.exe -Credential $credential -Wait -ArgumentList "Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout.txt" -RedirectStandardError "c:\stderr.txt" -Wait -Verb RunAs"
+      Start-Process powershell.exe -Credential $credential -Wait -ArgumentList "Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout0.txt" -RedirectStandardError "c:\stderr0.txt" -Wait -Verb RunAs"
       $now = Get-Date
-      echo $now > c:\finishedwarmup.txt
+      echo $now > c:\after0.txt
+      Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout1.txt" -RedirectStandardError "c:\stderr1.txt" -Wait -Verb RunAs
+      $now = Get-Date
+      echo $now > c:\after1.txt
+      Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout2.txt" -RedirectStandardError "c:\stderr2.txt" -Wait -Credential $credential
+      $now = Get-Date
+      echo $now > c:\after2.txt
+      Start-Process powershell.exe -Wait -ArgumentList $warmup -WorkingDirectory '\' -Verb RunAs -RedirectStandardOutput "c:\stdout3.txt" -RedirectStandardError "c:\stderr3.txt"
+      $now = Get-Date
+      echo $now > c:\after3.txt
    }
    else
    {
