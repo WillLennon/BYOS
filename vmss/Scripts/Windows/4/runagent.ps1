@@ -9,22 +9,13 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 $warmup = "\warmup.ps1"
 if (Test-Path -Path $warmup)
 {
-   if (![String]::IsNullOrEmpty($username))
-   {
-      $now = Get-Date
-      echo $now > c:\start.txt
+   $now = Get-Date
+   echo $now > c:\start.txt
 
-      # run as local admin elevated
-      Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -ArgumentList $warmup
-      $now = Get-Date
-      echo $now > c:\finish.txt
-   }
-   else
-   {
-      # run as system
-      echo runassystem > c:\runassystem.txt
-      Start-Process -FilePath PowerShell.exe -Wait -ArgumentList $warmup -WorkingDirectory '\' -Verb RunAs
-   }
+   # run as local admin elevated
+   Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
+   $now = Get-Date
+   echo $now > c:\finish.txt
 }
 
 # configure the build agent
