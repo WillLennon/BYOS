@@ -72,8 +72,7 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Syste
 $warmup = "\warmup.ps1"
 if (Test-Path -Path $warmup)
 {
-   if (![String]::IsNullOrEmpty($username) -and
-       ![String]::IsNullOrEmpty($password))
+   if (![String]::IsNullOrEmpty($username))
    {
       $now = Get-Date
       echo $now > c:\start.txt
