@@ -50,11 +50,17 @@ if ($windows.Edition -like '*datacenter*' -or
 {
   $username = 'AzDevOps'
   $password = (New-Guid).ToString()
-  echo $password > c:\password.txt
-  net user $username /delete
-  net user $username $password /add /y
-  net localgroup Administrators $username /add
-  net localgroup docker-users $username /add
+#  echo $password > c:\password.txt
+#  net user $username /delete
+#  net user $username $password /add /y
+#  net localgroup Administrators $username /add
+#  net localgroup docker-users $username /add
+  $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+  Remove-LocalUser -Name AzDevOps
+  New-LocalUser -Name AzDevOps -Password $securePassword
+  Add-LocalGroupMember -Group "Users" -Member $username
+  Add-LocalGroupMember -Group "Administrators" -Member $username
+  Add-LocalGroupMember -Group "docker-users" -Member $username
 }
 
 # disable powershell execution policy
@@ -73,7 +79,6 @@ if (Test-Path -Path $warmup)
       $now = Get-Date
       echo $now > c:\start.txt
       # run as local admin
-      $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
       $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 
       # This is wonky.  
