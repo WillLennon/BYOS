@@ -50,25 +50,16 @@ if ($windows.Edition -like '*datacenter*' -or
 {
   $username = 'AzDevOps'
   $password = (New-Guid).ToString()
-#  echo $password > c:\password.txt
-#  net user $username /delete
-#  net user $username $password /add /y
-#  net localgroup Administrators $username /add
-#  net localgroup docker-users $username /add
   $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+  $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
   Remove-LocalUser -Name AzDevOps
-  New-LocalUser -Name AzDevOps -Password $securePassword
+  New-LocalUser -Name $username -Password $securePassword
   Add-LocalGroupMember -Group "Users" -Member $username
   Add-LocalGroupMember -Group "Administrators" -Member $username
   Add-LocalGroupMember -Group "docker-users" -Member $username
   
-  $userDir = Join-Path -Path "\users" -ChildPath $username
-  Write-Host $userDir
-  while (!(Test-Path -Path $userDir))
-  {
-      Write-Host Waiting for $userDir
-      Sleep 5
-  }
+  #run a process as this user to break it in.
+  Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList "Echo hello > hello.txt"
 }
 
 # disable powershell execution policy
@@ -87,7 +78,6 @@ if (Test-Path -Path $warmup)
       $now = Get-Date
       echo $now > c:\start.txt
       # run as local admin
-      $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 
       # This is wonky.  
       # We want to run powershell both elevated and as the local admin, but Powershell won't let you do both -Credential and -Verb.
