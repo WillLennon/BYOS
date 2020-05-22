@@ -62,7 +62,7 @@ $windows = Get-WindowsEdition -Online
   }
   
   # TEST run a process as this user to break it in.
-  Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList "Echo hello > hello.txt"
+  Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -WorkingDirectory \ -ArgumentList "Echo hello > hello.txt"
 #}
 
 # TEST disable powershell execution policy
@@ -72,4 +72,4 @@ Set-ExecutionPolicy Unrestricted
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
 
 # run the rest of the script as the local user (unelevated)
-Start-Process -FilePath Powershell.exe  -Credential $credential -Wait -ArgumentList "-ExecutionPolicy Unrestricted -File $runFileDest $url $pool $pat $runArgs"
+Start-Process -FilePath Powershell.exe  -Credential $credential -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted -File $runFileDest $url $pool $pat $runArgs"
