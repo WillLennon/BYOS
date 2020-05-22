@@ -49,23 +49,28 @@ if ($windows.Edition -like '*datacenter*' -or
     $windows.Edition -like '*server*' )
 {
   $username = 'AzDevOps'
-  $password = (New-Guid).ToString()
+  $password = '*)Ns80nlsdfy89nL)' # (New-Guid).ToString()
   $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
   $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-  Remove-LocalUser -Name $username
-  New-LocalUser -Name $username -Password $securePassword
-  Add-LocalGroupMember -Group "Users" -Member $username
-  Add-LocalGroupMember -Group "Administrators" -Member $username
-  Add-LocalGroupMember -Group "docker-users" -Member $username
+  if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
+  {
+    New-LocalUser -Name $username -Password $securePassword
+    Add-LocalGroupMember -Group "Users" -Member $username
+    Add-LocalGroupMember -Group "Administrators" -Member $username
+    if (Get-LocalGroupMember -Name $username -ErrorAction Ignore)
+    {
+      Add-LocalGroupMember -Group "docker-users" -Member $username
+    }
+  }
   
-  #run a process as this user to break it in.
+  # TEST run a process as this user to break it in.
   Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList "Echo hello > hello.txt"
 }
 
-# disable powershell execution policy
+# TEST disable powershell execution policy
 Set-ExecutionPolicy Unrestricted
 
-# disable UAC so the warmup script doesn't prompt when we elevate
+# TEST disable UAC so the warmup script doesn't prompt when we elevate
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
 
 # run the customer warmup script if it exists
