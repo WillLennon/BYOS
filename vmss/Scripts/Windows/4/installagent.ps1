@@ -57,6 +57,9 @@ if ($windows.Edition -like '*datacenter*' -or
   net localgroup docker-users $username /add
 }
 
+# disable powershell execution policy
+Set-ExecutionPolicy Unrestricted
+
 # disable UAC so the warmup script doesn't prompt when we elevate
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
 
@@ -68,31 +71,23 @@ if (Test-Path -Path $warmup)
        ![String]::IsNullOrEmpty($password))
    {
       $now = Get-Date
-      echo $now > c:\startwarmup.txt
+      echo $now > c:\start.txt
       # run as local admin
       $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
       $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+
       # This is wonky.  
       # We want to run powershell both elevated and as the local admin, but Powershell won't let you do both -Credential and -Verb.
       # So start a process as the local admin and then have that process start another elevated process that runs the warmup script.
-      Start-Process powershell.exe -Credential $credential -Wait -ArgumentList "Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout0.txt" -RedirectStandardError "c:\stderr0.txt" -Wait -Verb RunAs"
+      Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList "Start-Process -FilePath PowerShell.exe -ArgumentList $warmup -WorkingDirectory '\' -Wait -Verb RunAs"
       $now = Get-Date
-      echo $now > c:\after0.txt
-      Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout1.txt" -RedirectStandardError "c:\stderr1.txt" -Wait -Verb RunAs
-      $now = Get-Date
-      echo $now > c:\after1.txt
-      Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout2.txt" -RedirectStandardError "c:\stderr2.txt" -Wait -Credential $credential
-      $now = Get-Date
-      echo $now > c:\after2.txt
-      Start-Process powershell.exe -Wait -ArgumentList $warmup -WorkingDirectory '\' -Verb RunAs -RedirectStandardOutput "c:\stdout3.txt" -RedirectStandardError "c:\stderr3.txt"
-      $now = Get-Date
-      echo $now > c:\after3.txt
+      echo $now > c:\finish.txt
    }
    else
    {
       # run as system
       echo runassystem > c:\runassystem.txt
-      Start-Process powershell.exe -Wait -ArgumentList $warmup -WorkingDirectory '\' -Verb RunAs
+      Start-Process -FilePath PowerShell.exe -Wait -ArgumentList $warmup -WorkingDirectory '\' -Verb RunAs
    }
 }
 
