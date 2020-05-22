@@ -1,8 +1,6 @@
 param
 (
    [string]$runArgs,
-   [string]$username,
-   [string]$password
 )
 
 # v4
@@ -14,15 +12,7 @@ if([string]::IsNullOrEmpty($runArgs))
 else
 {  $cmd1 = New-ScheduledTaskAction -Execute "C:\agent\run.cmd" -WorkingDirectory "C:\agent" $runArgs }
 
-if (![String]::IsNullOrEmpty($username) -and
-    ![String]::IsNullOrEmpty($password))
-{
-  Register-ScheduledTask -TaskName "BuildAgent" -User $username -Password $password -Trigger $time1 -Action $cmd1 -Force
-}
-else
-{
-  Register-ScheduledTask -TaskName "BuildAgent" -User System -Trigger $time1 -Action $cmd1 -Force
-}
+Register-ScheduledTask -TaskName "BuildAgent" -Trigger $time1 -Action $cmd1 -Force
 
 # delete the status folder from custom script extension directory
 $start2 = (Get-Date).AddSeconds(15)
