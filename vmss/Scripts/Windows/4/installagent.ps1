@@ -27,6 +27,12 @@ $runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
 $runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
 Copy-item $runFileSource $runFileDest
 
+# copy warmup script to the agent folder
+$warmupFile = "runwarmup.ps1"
+$warmupFileSource = Get-ChildItem -Path .\* -Recurse -Include $warmupFile
+$warmupFileDest = Join-Path -Path $agentDir -ChildPath $warmupFile
+Copy-item $runFileSource $warmupFileDest
+
 # testing
 $installFile = "installagent.ps1"
 $installFileSource = Get-ChildItem -Path .\* -Recurse -Include $installFile
@@ -73,36 +79,5 @@ Set-ExecutionPolicy Unrestricted
 # TEST disable UAC so the warmup script doesn't prompt when we elevate
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
 
-# run the customer warmup script if it exists
-$warmup = "\warmup.ps1"
-if (Test-Path -Path $warmup)
-{
-   if (![String]::IsNullOrEmpty($username))
-   {
-      $now = Get-Date
-      echo $now > c:\start.txt
-      # run as local admin
-
-      # This is wonky.  
-      # We want to run powershell both elevated and as the local admin, but Powershell won't let you do both -Credential and -Verb.
-      # So start a process as the local admin and then have that process start another elevated process that runs the warmup script.
-      Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList $warmup
-      $now = Get-Date
-      echo $now > c:\finish.txt
-   }
-   else
-   {
-      # run as system
-      echo runassystem > c:\runassystem.txt
-      Start-Process -FilePath PowerShell.exe -Wait -ArgumentList $warmup -WorkingDirectory '\' -Verb RunAs
-   }
-}
-
-# configure the build agent
-$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $pat"
-$config = $agentConfig + $configParameters
-Write-Host "Running " $config
-Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
-
-# schedule the build agent to run
-Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs $username $password"
+# run the rest of the script as the local user
+Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList $warmupFileDest
