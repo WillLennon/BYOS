@@ -58,17 +58,7 @@ if ($windows.Edition -like '*datacenter*' -or
 }
 
 # disable UAC so the warmup script doesn't prompt when we elevate
-$osversion = (Get-CimInstance Win32_OperatingSystem).Version 
-$version = $osversion.split(".")[0] 
- 
-if ($version -eq 10) 
-{ 
-    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
-} 
-else
-{ 
-    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
-}
+Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
 
 # run the customer warmup script if it exists
 $warmup = "\warmup.ps1"
@@ -84,7 +74,7 @@ if (Test-Path -Path $warmup)
       # This is wonky.  
       # We want to run powershell both elevated and as the local admin, but Powershell won't let you do both -Credential and -Verb.
       # So start a process as the local admin and then have that process start another elevated process that runs the warmup script.
-      Start-Process powershell.exe -Credential $credential -Wait -ArgumentList "Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -Wait -Verb RunAs"
+      Start-Process powershell.exe -Credential $credential -Wait -ArgumentList "Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout.txt" -RedirectStandardError "c:\stderr.txt" -Wait -Verb RunAs"
    }
    else
    {
