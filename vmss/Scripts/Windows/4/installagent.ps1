@@ -74,4 +74,4 @@ Set-ExecutionPolicy Unrestricted
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
 
 # run the rest of the script as the local user (unelevated)
-Start-Process -FilePath Powershell.exe -Credential $credential -Wait -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs"
+Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs" -Credential $credential -Wait 
