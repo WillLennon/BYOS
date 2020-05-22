@@ -64,10 +64,11 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Syste
 $warmup = "\warmup.ps1"
 if (Test-Path -Path $warmup)
 {
-   echo fileexists > c:\fileexists.txt
    if (![String]::IsNullOrEmpty($username) -and
        ![String]::IsNullOrEmpty($password))
    {
+      $now = Get-Date
+      echo $now > c:\startwarmup.txt
       # run as local admin
       $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
       $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
@@ -75,6 +76,8 @@ if (Test-Path -Path $warmup)
       # We want to run powershell both elevated and as the local admin, but Powershell won't let you do both -Credential and -Verb.
       # So start a process as the local admin and then have that process start another elevated process that runs the warmup script.
       Start-Process powershell.exe -Credential $credential -Wait -ArgumentList "Start-Process powershell.exe -ArgumentList $warmup -WorkingDirectory '\' -RedirectStandardOutput "c:\stdout.txt" -RedirectStandardError "c:\stderr.txt" -Wait -Verb RunAs"
+      $now = Get-Date
+      echo $now > c:\finishedwarmup.txt
    }
    else
    {
