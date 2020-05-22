@@ -61,6 +61,14 @@ if ($windows.Edition -like '*datacenter*' -or
   Add-LocalGroupMember -Group "Users" -Member $username
   Add-LocalGroupMember -Group "Administrators" -Member $username
   Add-LocalGroupMember -Group "docker-users" -Member $username
+  
+  $userDir = Join-Path -Path "\users" -ChildPath $username
+  Write-Host $userDir
+  while (!(Test-Path -Path $userDir))
+  {
+      Write-Host Waiting for $userDir
+      Sleep 5
+  }
 }
 
 # disable powershell execution policy
