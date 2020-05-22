@@ -1,5 +1,8 @@
 param
 (
+   [string]$url,
+   [string]$pool,
+   [string]$pat,
    [string]$runArgs
 )
 
