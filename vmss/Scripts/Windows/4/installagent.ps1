@@ -27,12 +27,6 @@ $runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
 $runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
 Copy-item $runFileSource $runFileDest
 
-# copy warmup script to the agent folder
-$runAsUserFile = "runasuser.ps1"
-$runAsUserFileSource = Get-ChildItem -Path .\* -Recurse -Include $runAsUserFile
-$runAsUserFileDest = Join-Path -Path $agentDir -ChildPath $runAsUserFile
-Copy-item $runAsUserFileSource $runAsUserFileDest
-
 # testing
 $installFile = "installagent.ps1"
 $installFileSource = Get-ChildItem -Path .\* -Recurse -Include $installFile
@@ -80,4 +74,4 @@ Set-ExecutionPolicy Unrestricted
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value "0" 
 
 # run the rest of the script as the local user (unelevated)
-Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList $warmupFileDest
+Start-Process -FilePath PowerShell.exe -Credential $credential -Wait -ArgumentList $runFileDest
