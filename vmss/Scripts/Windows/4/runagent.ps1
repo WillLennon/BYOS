@@ -8,6 +8,9 @@ param
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
+$agentConfig = Join-Path -Path $PSScriptRoot -ChildPath "config.cmd"
+$agentRun = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
+
 # run the customer warmup script if it exists
 $warmup = "\warmup.ps1"
 if (Test-Path -Path $warmup)
