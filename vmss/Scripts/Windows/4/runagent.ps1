@@ -8,8 +8,9 @@ param
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-$agentConfig = Join-Path -Path $PSScriptRoot -ChildPath "config.cmd"
-$agentRun = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
+$agentDir = $PSScriptRoot
+$agentConfig = Join-Path -Path $agentDir -ChildPath "config.cmd"
+$agentRun = Join-Path -Path $agentDir -ChildPath "run.cmd"
 
 # run the customer warmup script if it exists
 $warmup = "\warmup.ps1"
@@ -19,7 +20,7 @@ if (Test-Path -Path $warmup)
    echo $now > c:\start.txt
 
    # run as local admin elevated
-   Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
+   Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
    $now = Get-Date
    echo $now > c:\finish.txt
 }
@@ -29,7 +30,7 @@ if (Test-Path -Path $warmup)
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $pat"
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
-Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir -Verb RunAs
+Start-Process -FilePath $agentConfig -ArgumentList $configParameters -Wait -WorkingDirectory $agentDir -Verb RunAs
 
 # now schedule the build agent to run
 # we cannot just run this because the extension won't exit if a process we started is still running
@@ -62,4 +63,3 @@ $start2 = (Get-Date).AddSeconds(15)
 $time2 = New-ScheduledTaskTrigger -At $start2 -Once 
 $cmd2 = New-ScheduledTaskAction -Execute Powershell.exe -Argument 'Remove-Item "C:\Packages\Plugins\Microsoft.Compute.CustomScriptExtension\*\Status" -Recurse -ErrorAction Ignore'
 Register-ScheduledTask -TaskName "ExtensionCleanup" -User System -Trigger $time2 -Action $cmd2 -Force
-
