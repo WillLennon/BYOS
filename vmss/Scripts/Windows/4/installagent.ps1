@@ -75,4 +75,5 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Syste
 Set-Content -Path .\elevate.ps1 -Value 'param ( [string]$url, [string]$pool, [string]$pat, [string]$username, [string]$password, [string]$runArgs ) Start-Process -FilePath Powershell.exe -Verb RunAs -Wait -ArgumentList "-ExecutionPolicy Unrestricted -File .\runagent.ps1 -url $url -pool $pool -pat $pat -username $username -password $password $runArgs"'
 
 # run the elevate script as the local user (unelevated) which will then elevate and run the runagent.ps1 script
-Start-Process -FilePath Powershell.exe -Credential $credential -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted -File .\elevate.ps1 -url $url -pool $pool -pat $pat -username $username -password $password $runArgs"
+$argList = "-ExecutionPolicy Unrestricted -File .\elevate.ps1 -url $url -pool ""$pool"" -pat $pat -username $username -password $password $runArgs"
+Start-Process -FilePath Powershell.exe -Credential $credential -Wait -WorkingDirectory \ -ArgumentList $argList
