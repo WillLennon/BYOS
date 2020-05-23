@@ -3,6 +3,8 @@ param
    [string]$url,
    [string]$pool,
    [string]$pat,
+   [string]$username,
+   [string]$password,
    [string]$runArgs
 )
 
