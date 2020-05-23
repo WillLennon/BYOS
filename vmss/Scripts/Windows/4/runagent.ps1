@@ -19,12 +19,12 @@ $warmup = "\warmup.ps1"
 if (Test-Path -Path $warmup)
 {
    $now = Get-Date
-   echo $now > c:\start.txt
+   echo $now > c:\users\AzDevOps\start.txt
 
    # run as local admin elevated
    Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
    $now = Get-Date
-   echo $now > c:\finish.txt
+   echo $now > c:\users\AzDevOps\finish.txt
 }
 
 # configure the build agent
