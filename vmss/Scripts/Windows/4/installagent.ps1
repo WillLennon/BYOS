@@ -48,12 +48,25 @@ $credential = New-Object System.Management.Automation.PSCredential ($username, $
 if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
 {
   New-LocalUser -Name $username -Password $securePassword
+}
+else
+{
+  Set-LocalUser -Name $username -Password $securePassword 
+}
+if ((Get-LocalGroup -Name "Users" -ErrorAction Ignore) -and
+    !(Get-LocalGroupMember -Group "Users" -Member $username -ErrorAction Ignore))
+{
   Add-LocalGroupMember -Group "Users" -Member $username
+}
+if ((Get-LocalGroup -Name "Administrators" -ErrorAction Ignore) -and
+    !(Get-LocalGroupMember -Group "Administrators" -Member $username -ErrorAction Ignore))
+{
   Add-LocalGroupMember -Group "Administrators" -Member $username
-  if (Get-LocalGroupMember -Name $username -ErrorAction Ignore)
-  {
-    Add-LocalGroupMember -Group "docker-users" -Member $username
-  }
+}
+if ((Get-LocalGroup -Name "docker-users" -ErrorAction Ignore) -and
+    !(Get-LocalGroupMember -Group "docker-users" -Member $username -ErrorAction Ignore))
+{
+  Add-LocalGroupMember -Group "docker-users" -Member $username
 }
 
 # run the customer warmup script if it exists
