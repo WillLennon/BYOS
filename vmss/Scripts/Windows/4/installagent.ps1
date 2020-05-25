@@ -21,6 +21,19 @@ if (!(Test-Path -Path $agentDir))
    New-Item -ItemType directory -Path $agentDir
 }
 
+# copy run script to the agent folder
+$runFile = "runagent.ps1"
+$runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
+$runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
+Copy-item $runFileSource $runFileDest
+
+#unzip the agent if it doesn't exist already
+if (!(Test-Path -Path $agentExe))
+{
+   Write-Host "Unzipping agent"
+   [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
+}
+
 # create administrator account
 $username = 'AzDevOps'
 $password = (New-Guid).ToString()
@@ -35,19 +48,6 @@ if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
   {
     Add-LocalGroupMember -Group "docker-users" -Member $username
   }
-}
-
-# copy run script to the agent folder
-$runFile = "runagent.ps1"
-$runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
-$runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
-Copy-item $runFileSource $runFileDest
-
-#unzip the agent if it doesn't exist already
-if (!(Test-Path -Path $agentExe))
-{
-   Write-Host "Unzipping agent"
-   [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
 }
 
 # run the customer warmup script if it exists
@@ -66,4 +66,5 @@ Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 # schedule the build agent to run
+$argList = "-ExecutionPolicy Unrestricted -File $runFileDest -username $username -password $password $runArgs"
 Start-Process -FilePath Powershell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs"
