@@ -27,6 +27,12 @@ $runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
 $runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
 Copy-item $runFileSource $runFileDest
 
+# TESTING. copy install script to the agent folder
+$installFile = "installagent.ps1"
+$installFileSource = Get-ChildItem -Path .\* -Recurse -Include $installFile
+$installFileDest = Join-Path -Path $agentDir -ChildPath $installFile
+Copy-item $installFileSource $installFileDest
+
 #unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
 {
