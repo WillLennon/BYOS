@@ -86,4 +86,4 @@ Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindo
 
 # schedule the build agent to run
 $argList = "-ExecutionPolicy Unrestricted -File $runFileDest -username $username -password $password $runArgs"
-Start-Process -FilePath Powershell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs"
+Start-Process -FilePath Powershell.exe -Verb RunAs -ArgumentList $argList
