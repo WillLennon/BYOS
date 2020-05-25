@@ -34,6 +34,15 @@ if (!(Test-Path -Path $agentExe))
    [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
 }
 
+# run the customer warmup script if it exists
+# note that this runs as SYSTEM on windows
+$warmup = "\warmup.ps1"
+if (Test-Path -Path $warmup)
+{
+   # run as local admin elevated
+   Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
+}
+
 # configure the build agent
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $pat"
 $config = $agentConfig + $configParameters
