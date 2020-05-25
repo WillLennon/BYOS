@@ -21,6 +21,22 @@ if (!(Test-Path -Path $agentDir))
    New-Item -ItemType directory -Path $agentDir
 }
 
+# create administrator account
+$username = 'AzDevOps'
+$password = (New-Guid).ToString()
+$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
+{
+  New-LocalUser -Name $username -Password $securePassword
+  Add-LocalGroupMember -Group "Users" -Member $username
+  Add-LocalGroupMember -Group "Administrators" -Member $username
+  if (Get-LocalGroupMember -Name $username -ErrorAction Ignore)
+  {
+    Add-LocalGroupMember -Group "docker-users" -Member $username
+  }
+}
+
 # copy run script to the agent folder
 $runFile = "runagent.ps1"
 $runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
