@@ -1,8 +1,8 @@
 param
 (
-   [string]$runArgs,
    [string]$username,
-   [string]$password
+   [string]$password,
+   [string]$runArgs
 )
 
 # schedule the build agent to run
