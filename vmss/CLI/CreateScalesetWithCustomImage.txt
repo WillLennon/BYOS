@@ -1,6 +1,6 @@
 These are steps to create an Azure Scaleset with a custom OS disk size and custom software. Follow these steps to create a scaleset suitable for use as an Azure DevOps Elastic Agent Pool.
 
-If you just want to create a scaleset with the default 128GiB OS disk using a publicly available Azure image, then skip straight to Step 6 and use the public image name (UbuntuLTS, Win2019DataCenter, etc) to create the scaleset.  Otherwise follow these steps to customize your VM image.
+If you just want to create a scaleset with the default 128GiB OS disk using a publicly available Azure image, then skip straight to Step 4 and use the public image name (UbuntuLTS, Win2019DataCenter, etc) to create the scaleset.  Otherwise follow these steps to customize your VM image.
 
 Prerequisites:
 Install Azure CLI:
