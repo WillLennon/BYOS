@@ -27,6 +27,7 @@ echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 # Create agent folder
 echo creating agent folder
 mkdir -p -v /agent
+sudo chmod -R 777 /agent
 
 # Copy run script
 cp runagent.sh /agent/runagent.sh
