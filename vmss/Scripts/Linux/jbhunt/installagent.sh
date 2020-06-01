@@ -7,17 +7,17 @@ pool=$2
 pat=$3
 runArgs=$4
 
+# Create agent folder and make sure we have access to it
+echo creating agent folder
+mkdir -p -v /agent
+sudo chmod 777 /agent
+
 # Create our user account
 echo creating AzDevOps account
 sudo useradd -m AzDevOps
 sudo usermod -a -G sudo AzDevOps
 sudo usermod -a -G adm AzDevOps
 sudo usermod -a -G docker AzDevOps
-
-# Create agent folder and make sure we have access to it
-echo creating agent folder
-mkdir -p -v /agent
-sudo chmod 777 /agent
 
 echo "Giving AzDevOps user access to the '/home', '/usr/share', and '/opt' directories."
 sudo chmod -R 777 /home
