@@ -18,8 +18,9 @@ sudo usermod -a -G sudo AzDevOps
 echo creating agent folder
 mkdir -p -v /agent
 
+# grant permissions to mimic the hosted pools
+# don't grant +w to the /home folder because it breaks ssh
 sudo chmod -R +r /home
-#setfacl -Rdm "u:AzDevOps:rwX" /home
 setfacl -Rb /home/AzDevOps
 sudo chmod -R 777 /usr/share
 setfacl -Rdm "u:AzDevOps:rwX" /usr/share
@@ -30,18 +31,16 @@ echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 # Copy run script
 cp runagent.sh /agent/runagent.sh
 
-# TEST ONLY
-cp installagent.sh /agent/installagent.sh
-
+# unzip the agent files
 zipfile=$(find vsts-agent*.tar.gz)
-echo unzipping $zipfile into /agent folder
 tar -xvf  $zipfile -C /agent
 cd /agent
 
+# grant broad permissions in the agent folder
 sudo chmod -R 777 /agent
 sudo chown -R AzDevOps:AzDevOps /agent
 
-echo installing dependencies
+# install dependencies
 ./bin/installdependencies.sh
 
 # install at to be used when we schedule the build agent to run later
@@ -64,5 +63,3 @@ sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \
 
 # schedule the build agent to run immediately
 /bin/bash ./runagent.sh $runArgs
-
-echo done
