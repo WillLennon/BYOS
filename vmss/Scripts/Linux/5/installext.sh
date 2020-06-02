@@ -10,14 +10,12 @@ pat=$3
 # Create our user account
 echo creating AzDevOps account
 sudo useradd -m AzDevOps
-sudo usermod -a -G sudo AzDevOps
-sudo usermod -a -G adm AzDevOps
 sudo usermod -a -G docker AzDevOps
+sudo usermod -a -G adm AzDevOps
+sudo usermod -a -G sudo AzDevOps
 
 echo "Giving AzDevOps user access to the '/home', '/usr/share', and '/opt' directories."
-sudo chmod -R 777 /agent
-setfacl -Rdm "u:AzDevOps:rwX" /agent
-sudo chmod -R 777 /home
+sudo chmod -R +r /home
 setfacl -Rdm "u:AzDevOps:rwX" /home
 setfacl -Rb /home/AzDevOps
 sudo chmod -R 777 /usr/share
@@ -26,11 +24,16 @@ sudo chmod -R 777 /opt
 setfacl -Rdm "u:AzDevOps:rwX" /opt
 echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
+# unzip the agent files
 zipfile=$(find vsts-agent*.tar.gz)
-echo unzipping $zipfile into /agent folder
 tar -xvf  $zipfile -C /agent
 cd /agent
 
+# grant broad permissions in the agent folder
+sudo chmod -R 777 /agent
+sudo chown -R AzDevOps:AzDevOps /agent
+
+# install dependencies
 echo installing dependencies
 ./bin/installdependencies.sh
 
@@ -48,5 +51,3 @@ fi
 # calling bash here so the quotation marks around $pool get respected
 echo configuring build agent
 sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $pat --acceptTeeEula --replace"
-
-echo done
