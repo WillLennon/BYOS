@@ -17,9 +17,9 @@ sudo usermod -a -G sudo AzDevOps
 # Create agent folder and make sure we have access to it
 echo creating agent folder
 mkdir -p -v /agent
-sudo chmod 777 /agent
 
-echo "Giving AzDevOps user access to the '/home', '/usr/share', and '/opt' directories."
+sudo chmod 777 /agent
+sudo chown -R AzDevOps:AzDevOps /agent
 sudo chmod -R +r /home
 #setfacl -Rdm "u:AzDevOps:rwX" /home
 setfacl -Rb /home/AzDevOps
