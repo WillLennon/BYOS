@@ -10,13 +10,17 @@ runArgs=$4
 # Create our user account
 echo creating AzDevOps account
 sudo useradd -m AzDevOps
-sudo usermod -a -G sudo AzDevOps
-sudo usermod -a -G adm AzDevOps
 sudo usermod -a -G docker AzDevOps
+sudo usermod -a -G adm AzDevOps
+sudo usermod -a -G sudo AzDevOps
 
-echo "Giving AzDevOps user access to the '/home', '/usr/share', and '/opt' directories."
-sudo chmod -R 777 /home
-setfacl -Rdm "u:AzDevOps:rwX" /home
+# Create agent folder and make sure we have access to it
+echo creating agent folder
+mkdir -p -v /agent
+
+# grant permissions to mimic the hosted pools
+# don't grant +w to the /home folder because it breaks ssh
+sudo chmod -R +r /home
 setfacl -Rb /home/AzDevOps
 sudo chmod -R 777 /usr/share
 setfacl -Rdm "u:AzDevOps:rwX" /usr/share
@@ -24,21 +28,19 @@ sudo chmod -R 777 /opt
 setfacl -Rdm "u:AzDevOps:rwX" /opt
 echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
-# Create agent folder
-echo creating agent folder
-mkdir -p -v /agent
-
 # Copy run script
 cp runagent.sh /agent/runagent.sh
-# TEST ONLY
-cp installagent.sh /agent/installagent.sh
 
+# unzip the agent files
 zipfile=$(find vsts-agent*.tar.gz)
-echo unzipping $zipfile into /agent folder
 tar -xvf  $zipfile -C /agent
 cd /agent
 
-echo installing dependencies
+# grant broad permissions in the agent folder
+sudo chmod -R 777 /agent
+sudo chown -R AzDevOps:AzDevOps /agent
+
+# install dependencies
 ./bin/installdependencies.sh
 
 # install at to be used when we schedule the build agent to run later
@@ -61,5 +63,3 @@ sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \
 
 # schedule the build agent to run immediately
 /bin/bash ./runagent.sh $runArgs
-
-echo done
