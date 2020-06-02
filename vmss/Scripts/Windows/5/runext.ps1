@@ -11,3 +11,4 @@ $credential = New-Object System.Management.Automation.PSCredential ($username, $
 $runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
 Start-Process -FilePath $runCmd -Credential $credential -ArgumentList $runArgs
 
+Remove-Item password.txt
