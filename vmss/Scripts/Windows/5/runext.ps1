@@ -3,10 +3,11 @@ param
    [string]$runArgs
 )
 
-$runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
 $username = Get-Content username.txt
 $password = Get-Content password.txt
+$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+$credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 
-$argList = "-ExecutionPolicy Unrestricted -File $runCmd -username $username -password $password $runArgs"
-Start-Process -FilePath Powershell.exe -Verb RunAs -ArgumentList $argList
+$runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
+Start-Process -FilePath $runCmd -Credential $credential -ArgumentList $runArgs
 
