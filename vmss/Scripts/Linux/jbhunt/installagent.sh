@@ -11,6 +11,7 @@ runArgs=$4
 echo creating agent folder
 mkdir -p -v /agent
 sudo chmod 777 /agent
+setfacl -Rdm "u:AzDevOps:rwX" /agent
 
 # Create our user account
 echo creating AzDevOps account
