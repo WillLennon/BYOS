@@ -18,8 +18,6 @@ sudo usermod -a -G sudo AzDevOps
 echo creating agent folder
 mkdir -p -v /agent
 
-sudo chmod 777 /agent
-sudo chown -R AzDevOps:AzDevOps /agent
 sudo chmod -R +r /home
 #setfacl -Rdm "u:AzDevOps:rwX" /home
 setfacl -Rb /home/AzDevOps
@@ -40,6 +38,9 @@ zipfile=$(find vsts-agent*.tar.gz)
 echo unzipping $zipfile into /agent folder
 tar -xvf  $zipfile -C /agent
 cd /agent
+
+sudo chmod -R 777 /agent
+sudo chown -R AzDevOps:AzDevOps /agent
 
 echo installing dependencies
 ./bin/installdependencies.sh
