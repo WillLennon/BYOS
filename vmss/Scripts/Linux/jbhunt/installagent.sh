@@ -31,6 +31,9 @@ echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 # Copy run script
 cp runagent.sh /agent/runagent.sh
 
+# testing only
+cp installagent.sh /agent/installagent.sh
+
 # unzip the agent files
 zipfile=$(find vsts-agent*.tar.gz)
 tar -xvf  $zipfile -C /agent
