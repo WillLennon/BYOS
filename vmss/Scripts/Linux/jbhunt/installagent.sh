@@ -1,4 +1,5 @@
 #!/bin/bash
+# JBHUNT test
 
 # We require 3 inputs: $1 is url, $2 is pool, $3 is PAT
 # 4th input is option $4 is either '--once' or null
