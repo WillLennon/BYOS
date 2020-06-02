@@ -11,8 +11,8 @@ runArgs=$4
 echo creating AzDevOps account
 sudo useradd -m AzDevOps
 sudo usermod -a -G docker AzDevOps
-sudo usermod -a -G sudo AzDevOps
 sudo usermod -a -G adm AzDevOps
+sudo usermod -a -G sudo AzDevOps
 
 # Create agent folder and make sure we have access to it
 echo creating agent folder
