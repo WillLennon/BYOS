@@ -21,9 +21,11 @@ if (!(Test-Path -Path $agentExe))
 
 # create administrator account
 $username = 'AzDevOps'
+Set-Content -Path username.txt -Value $username
 $password = (New-Guid).ToString()
+Set-Content -Path password.txt -Value $password
 $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+
 if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
 {
   New-LocalUser -Name $username -Password $securePassword
