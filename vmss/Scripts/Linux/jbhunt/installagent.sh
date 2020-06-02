@@ -32,6 +32,8 @@ echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
 # Copy run script
 cp runagent.sh /agent/runagent.sh
+chmod 777 /agent/runagent.sh
+
 # TEST ONLY
 cp installagent.sh /agent/installagent.sh
 
