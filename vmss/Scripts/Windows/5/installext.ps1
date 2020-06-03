@@ -2,8 +2,7 @@ param
 (
    [string]$url,
    [string]$pool,
-   [string]$token,
-   [string]$logFile
+   [string]$token
 )
 
 function Log-Message 
@@ -12,13 +11,12 @@ function Log-Message
 
    $now = [DateTime]::UtcNow.ToString('u')
    $text = $now + " " + $message
-   Add-Content -Path $script:logfile -Value $text
+   Add-Content -Path "script.log" -Value $text
    Write-Host $text
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $agentDir = $PSScriptRoot
-$script:logfile = $logFile
 
 Log-Message "Installing extension"
 Log-Message ("URL: " + $url)
