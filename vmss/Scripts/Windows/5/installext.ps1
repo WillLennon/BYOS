@@ -42,8 +42,8 @@ if (!(Test-Path -Path $agentExe))
    catch
    {
       Log-Message $Error[0]
+      exit -100
    }
-   exit -100
 }
 
 # create administrator account
@@ -90,12 +90,20 @@ if (Test-Path -Path $warmup)
 {
    # run as local admin elevated
    Log-Message "Running warmup script"
-   Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
+   try
+   {
+      Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
+   }
+   catch
+   {
+      Log-Message $Error[0]
+      exit -101
+   }
 }
 
 # configure the build agent
+Log-Message "Configuring agent"
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
 $config = $agentConfig + $configParameters
-Log-Message "Configuring agent"
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 Log-Message "Finished configuration."
