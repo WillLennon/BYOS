@@ -107,3 +107,4 @@ $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRe
 $config = $agentConfig + $configParameters
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 Log-Message "Finished configuration."
+Sleep 10
