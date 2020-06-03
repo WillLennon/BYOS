@@ -9,7 +9,8 @@ function Log-Message
 
    $now = [DateTime]::UtcNow.ToString('u')
    $text = $now + " " + $message
-   Add-Content -Path status.txt -Value $text
+   $logfile = Join-Path -Path $PSScriptRoot -ChildPath "status.txt"
+   Add-Content -Path $logfile -Value $text
 }
 
 
