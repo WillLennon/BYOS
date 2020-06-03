@@ -2,7 +2,7 @@ param
 (
    [string]$url,
    [string]$pool,
-   [string]$pat
+   [string]$token
 )
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -60,7 +60,7 @@ if (Test-Path -Path $warmup)
 }
 
 # configure the build agent
-$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $pat"
+$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
 $config = $agentConfig + $configParameters
 Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
