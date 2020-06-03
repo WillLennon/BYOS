@@ -14,7 +14,7 @@ function Log-Message
 
 
 Log-Message "Enabling Extension"
-Log-Message "runArgs: " + $runArgs
+Log-Message ("runArgs: " + $runArgs)
 
 $username = Get-Content username.txt
 $password = Get-Content password.txt
