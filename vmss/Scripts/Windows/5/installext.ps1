@@ -13,6 +13,7 @@ function Log-Message
    $text = $now + " " + $message
    $logfile = Join-Path -Path $PSScriptRoot -ChildPath "extension.log"
    Add-Content -Path $logfile -Value $text
+   Write-Host $text
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
