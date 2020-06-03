@@ -107,4 +107,3 @@ $config = $agentConfig + $configParameters
 Log-Message ("Configuring agent: " + $config)
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 Log-Message "Finished configuration."
-Sleep 10
