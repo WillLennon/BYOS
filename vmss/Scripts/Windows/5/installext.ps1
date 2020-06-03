@@ -24,7 +24,7 @@ Log-Message ("Pool: " + $pool)
 Log-Message ("agentDir: " + $agentDir)
 
 $agentExe = Join-Path -Path $agentDir -ChildPath "bin\Agent.Listener.exe"
-$agentZip = Get-ChildItem -Path .\* -File -Include vsts-agent*.zip
+$agentZip = Get-ChildItem -Path $agentDir\* -File -Include vsts-agent*.zip
 $agentConfig = Join-Path -Path $agentDir -ChildPath "config.cmd"
 
 Log-Message ("agentExe: " + $agentExe)
