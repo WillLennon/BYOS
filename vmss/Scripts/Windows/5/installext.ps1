@@ -16,15 +16,20 @@ function Log-Message
 }
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
+$agentDir = $PSScriptRoot
 
 Log-Message "Installing extension"
 Log-Message ("URL: " + $url)
 Log-Message ("Pool: " + $pool) 
+Log-Message ("agentDir: " + $agentDir)
 
-$agentDir = $PSScriptRoot
 $agentExe = Join-Path -Path $agentDir -ChildPath "bin\Agent.Listener.exe"
 $agentZip = Get-ChildItem -Path .\* -File -Include vsts-agent*.zip
 $agentConfig = Join-Path -Path $agentDir -ChildPath "config.cmd"
+
+Log-Message ("agentExe: " + $agentExe)
+Log-Message ("agentZip: " + $agentZip)
+Log-Message ("agentConfig: " + $agentConfig)
 
 #unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
