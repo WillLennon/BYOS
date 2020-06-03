@@ -16,7 +16,6 @@ function Log-Message
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-Set-Content -Path status.txt -Value ""
 Log-Message "Installing extension"
 Log-Message ("URL: " + $url)
 Log-Message ("Pool: " + $pool) 
