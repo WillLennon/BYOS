@@ -5,7 +5,7 @@ param
 
 $username = Get-Content username.txt
 $password = Get-Content password.txt
-Remove-Item password.txt
+
 $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 
@@ -20,3 +20,4 @@ else
    Start-Process -FilePath $runCmd -Credential $credential -ArgumentList $runArgs
 }
 
+Remove-Item password.txt
