@@ -7,7 +7,9 @@ param
 
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
-Set-Content -Path status.txt -Value "Installing agent on " + $url + " pool " + $pool 
+Set-Content -Path status.txt -Value "Installing extension"
+Add-Content -Path status.txt -Value $url
+Add-Content -Path status.txt -Value $pool 
 
 $agentDir = $PSScriptRoot
 $agentExe = Join-Path -Path $agentDir -ChildPath "bin\Agent.Listener.exe"
@@ -71,5 +73,6 @@ if (Test-Path -Path $warmup)
 # configure the build agent
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
 $config = $agentConfig + $configParameters
-Add-Content -Path status.txt -Value "Configuring agent "
+Add-Content -Path status.txt -Value "Configuring agent"
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+Add-Content -Path status.txt -Value "Finished configuration."
