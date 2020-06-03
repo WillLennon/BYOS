@@ -9,10 +9,9 @@ function Log-Message
 
    $now = [DateTime]::UtcNow.ToString('u')
    $text = $now + " " + $message
-   $logfile = Join-Path -Path $PSScriptRoot -ChildPath "status.txt"
+   $logfile = Join-Path -Path $PSScriptRoot -ChildPath "extension.log"
    Add-Content -Path $logfile -Value $text
 }
-
 
 Log-Message "Enabling Extension"
 Log-Message ("runArgs: " + $runArgs)
