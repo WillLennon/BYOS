@@ -11,7 +11,12 @@ function Log-Message
 
    $now = [DateTime]::UtcNow.ToString('u')
    $text = $now + " " + $message
-   Add-Content -Path "script.log" -Value $text
+   $logFile = "script.log"
+   if (!(Test-Path -Path $logFile))
+   {
+      Set-Content -Path $logFile -Value ""
+   }
+   Add-Content -Path $logFile -Value $text
    Write-Host $text
 }
 
