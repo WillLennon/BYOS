@@ -35,7 +35,15 @@ Log-Message ("agentConfig: " + $agentConfig)
 if (!(Test-Path -Path $agentExe))
 {
    Log-Message "Unzipping Agent"
-   [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
+   try
+   {
+      [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
+   }
+   catch
+   {
+      Log-Message $Error[0]
+   }
+   exit -100
 }
 
 # create administrator account
