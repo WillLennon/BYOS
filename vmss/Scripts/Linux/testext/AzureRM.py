@@ -338,7 +338,7 @@ def get_configuration_from_settings():
 
       handler_utility.log('IsPipelinesAgent4')
       return {
-              'IsPipelinesAgent': true,
+              'IsPipelinesAgent': 'true',
               'AgentDownloadUrl':agentDownloadUrl,
               'AgentFolder':agentFolder,
               'EnableScriptDownloadUrl':enableScriptDownloadUrl,
@@ -398,7 +398,6 @@ def get_configuration_from_settings():
     handler_utility.log('Done reading config settings from file...')
     handler_utility.add_handler_sub_status(Util.HandlerSubStatus('SuccessfullyReadSettings'))
     return {
-             'IsPipelinesAgent': false,
              'VSTSUrl':vsts_url,
              'PATToken':pat_token, 
              'TeamProject':team_project_name, 
