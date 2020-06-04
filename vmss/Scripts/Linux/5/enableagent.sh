@@ -64,9 +64,9 @@ apt install at
 # configure the build agent
 # calling bash here so the quotation marks around $pool get respected
 echo configuring build agent
-configArgs = "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
+configArgs = "/bin/bash $dir/config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
 echo $configArgs
-sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
+sudo runuser AzDevOps -c "/bin/bash $dir/config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
 
 # install at to be used when we schedule the build agent to run and not wait for it to finish
 echo "sudo runuser AzDevOps -c \"/bin/bash $dir/run.sh $runArgs\"" | at now
