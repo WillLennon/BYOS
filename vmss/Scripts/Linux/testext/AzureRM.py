@@ -581,7 +581,7 @@ def enable():
   pre_validation_checks()
   config = get_configuration_from_settings()
   if (config['IsPipelinesAgent']):
-    EnablePipelinesAgent.enable_pipelines_agent(config)
+    enable_pipelines_agent(config)
     return
 
   compare_sequence_number()
