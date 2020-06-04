@@ -31,7 +31,7 @@ setfacl -Rdm "u:AzDevOps:rwX" /opt
 echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
 # unzip the agent files
-if [! test -f "$dir/bin/Agent.Listener"]; then
+if !test -f "$dir/bin/Agent.Listener"; then
     echo "Unzipping agent"
     zipfile=$(find $dir/vsts-agent*.tar.gz)
     echo "zipfile is " $zipfile
