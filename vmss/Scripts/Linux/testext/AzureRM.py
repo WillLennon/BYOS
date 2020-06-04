@@ -553,6 +553,7 @@ def enable_pipelines_agent(config):
     handler_utility.log(downloadUrl)
     filename = os.path.basename(downloadUrl)
     agentFile = os.path.join(agentFolder, filename)
+    handler_utility.log(agentFile)
     urllib.urlretrieve(downloadUrl, agentFile)
 
     # download the enable script
