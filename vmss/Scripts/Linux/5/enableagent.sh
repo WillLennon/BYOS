@@ -53,4 +53,6 @@ fi
 echo configuring build agent
 sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
 
-sudo runuser AzDevOps -c "/bin/bash /agent/run.sh $runArgs"
+# install at to be used when we schedule the build agent to run and not wait for it to finish
+apt install at
+echo "sudo runuser AzDevOps -c \"/bin/bash /agent/run.sh $runArgs\"" | at now
