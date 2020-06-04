@@ -302,6 +302,7 @@ def validate_inputs(config):
 
 def get_configuration_from_settings():
   try:
+    handler_utility.log('Reading settings')
     public_settings = handler_utility.get_public_settings()
     if(public_settings == None):
       public_settings = {}
@@ -313,17 +314,21 @@ def get_configuration_from_settings():
 
     # if this is a pipelines agent, read the settings and return quickly
     if(public_settings.has_key('IsPipelinesAgent')):
+      handler_utility.log('IsPipelinesAgent')
 
       # read pipelines agent settings
       agentDownloadUrl = public_settings['AgentDownloadUrl']
       handler_utility.verify_input_not_null('AgentDownloadUrl', agentDownloadUrl)
 
+      handler_utility.log('IsPipelinesAgent1')
       agentFolder = public_settings['AgentFolder']
       handler_utility.verify_input_not_null('AgentFolder', agentFolder)
 
+      handler_utility.log('IsPipelinesAgent2')
       enableScriptDownloadUrl = public_settings['EnableScriptDownloadUrl']
       handler_utility.verify_input_not_null('EnableScriptDownloadUrl', enableScriptDownloadUrl)
 
+      handler_utility.log('IsPipelinesAgent3')
       # for testing, first try to get the script parameters from the public settings
       # in production they will be in the protected settings
       enableScriptParameters = public_settings['EnableScriptParameters']
@@ -331,6 +336,7 @@ def get_configuration_from_settings():
         enableScriptParameters = protected_settings['EnableScriptParameters']
       handler_utility.verify_input_not_null('EnableScriptParameters', enableScriptParameters)
 
+      handler_utility.log('IsPipelinesAgent4')
       return {
               'IsPipelinesAgent': true,
               'AgentDownloadUrl':agentDownloadUrl,
@@ -340,6 +346,7 @@ def get_configuration_from_settings():
             }
 
     # continue with deployment agent settings
+    handler_utility.log('IsPipelinesAgent should not get here')
     pat_token = ''
     if((protected_settings.__class__.__name__ == 'dict') and protected_settings.has_key('PATToken')):
       pat_token = protected_settings['PATToken']
@@ -545,9 +552,11 @@ def enable():
   pre_validation_checks()
   config = get_configuration_from_settings()
   if (config['IsPipelinesAgent']):
+    handler_utility.log('calling enable pipelines agent')
     enable_pipelines_agent(config)
     return
 
+  handler_utility.log('should never get past enable pipelines agent')
   compare_sequence_number()
   settings_are_same = test_extension_settings_are_same_as_disabled_version()
   if(settings_are_same):
