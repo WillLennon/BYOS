@@ -8,6 +8,11 @@ pool=$2
 token=$3
 runArgs=$4
 
+# get the folder where the script is executing
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+echo "directory is " $dir
+
 # Create our user account
 echo creating AzDevOps account
 sudo useradd -m AzDevOps
@@ -26,13 +31,14 @@ setfacl -Rdm "u:AzDevOps:rwX" /opt
 echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
 # unzip the agent files
-zipfile=$(find vsts-agent*.tar.gz)
-tar -xvf  $zipfile -C /agent
-cd /agent
+zipfile=$(find $dir/vsts-agent*.tar.gz)
+echo "zipfile is " $zipfile
+tar -xvf  $zipfile -C $dir
+cd $dir
 
 # grant broad permissions in the agent folder
-sudo chmod -R 777 /agent
-sudo chown -R AzDevOps:AzDevOps /agent
+sudo chmod -R 777 $dir
+sudo chown -R AzDevOps:AzDevOps $dir
 
 # install dependencies
 echo installing dependencies
@@ -55,4 +61,4 @@ sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \
 
 # install at to be used when we schedule the build agent to run and not wait for it to finish
 apt install at
-echo "sudo runuser AzDevOps -c \"/bin/bash /agent/run.sh $runArgs\"" | at now
+echo "sudo runuser AzDevOps -c \"/bin/bash $dir/run.sh $runArgs\"" | at now
