@@ -45,6 +45,7 @@ if (!(Test-Path -Path $agentExe))
    try
    {
       [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
+      Remove-Item $agentZip
    }
    catch
    {
@@ -115,10 +116,7 @@ Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindo
 Log-Message "Enabling Extension"
 
 $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-
 $runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
-
-Log-Message $runCmd
 
 if([string]::IsNullOrEmpty($runArgs))
 {
