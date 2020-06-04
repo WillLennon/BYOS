@@ -21,6 +21,7 @@ from distutils.version import LooseVersion
 from time import sleep
 from urllib2 import quote
 import urllib
+import shlex
 
 configured_agent_exists = False
 agent_configuration_required = True
@@ -579,10 +580,14 @@ def enable_pipelines_agent(config):
     handler_utility.log(enableFile)
     enableParameters = config["EnableScriptParameters"]
     handler_utility.log(enableParameters)
+    temp = " ".join(['/bin/bash -c', enableFile, enableParameters])
+    handler_utility.log(temp)
+    args = shlex.split(temp)
+    handler_utility.log(args)
 
-    // grant executable access to the script    
+    # grant executable access to the script    
     os.chmod(enableFile, 0o777)
-    enableProcess = subprocess.Popen(['/bin/bash', '-c', enableFile, enableParameters])
+    enableProcess = subprocess.Popen(args)
 
     # wait for the script to complete
     enableProcess.communicate()
