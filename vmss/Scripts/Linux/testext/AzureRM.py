@@ -20,7 +20,7 @@ from Utils.WAAgentUtil import waagent
 from distutils.version import LooseVersion
 from time import sleep
 from urllib2 import quote
-import EnablePipelinesAgent
+from EnablePipelinesAgent import EnablePipelinesAgent
 
 configured_agent_exists = False
 agent_configuration_required = True
@@ -552,7 +552,7 @@ def enable():
   config = get_configuration_from_settings()
   if (config['IsPipelinesAgent']):
     handler_utility.log('calling enable pipelines agent')
-    enable_pipelines_agent(config)
+    EnablePipelinesAgent.enable_pipelines_agent(config)
     return
 
   handler_utility.log('should never get past enable pipelines agent')
