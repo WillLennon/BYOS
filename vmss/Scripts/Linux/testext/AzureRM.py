@@ -576,11 +576,11 @@ def enable_pipelines_agent(config):
     # run the enable script
     handler_utility.add_handler_sub_status(Util.HandlerSubStatus('EnablePipelinesAgent'))
     handler_utility.log('Run Pipelines Script')
-    enableParameters = config["EnableScriptParameters"]
     handler_utility.log(enableFile)
+    enableParameters = config["EnableScriptParameters"]
     handler_utility.log(enableParameters)
-    
-    handler_utility.log("chmod")
+
+    // grant executable access to the script    
     os.chmod(enableFile, 0o777)
     enableProcess = subprocess.Popen(['/bin/bash', '-c', enableFile, enableParameters])
 
