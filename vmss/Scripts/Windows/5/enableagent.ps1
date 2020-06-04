@@ -113,7 +113,7 @@ $config = $agentConfig + $configParameters
 Log-Message ("Configuring agent: " + $config)
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
-Log-Message "Enabling Extension"
+Log-Message "Running Agent"
 
 $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 $runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
