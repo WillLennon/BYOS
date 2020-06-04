@@ -53,4 +53,4 @@ fi
 echo configuring build agent
 sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
 
-sudo runuser AzDevOps -c \"/bin/bash /agent/run.sh $runArgs\"
+sudo runuser AzDevOps -c "/bin/bash /agent/run.sh $runArgs"
