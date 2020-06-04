@@ -8,6 +8,11 @@ pool=$2
 token=$3
 runArgs=$4
 
+echo "url is " $url
+echo "pool is " $pool
+echo "token is " $token
+echo "runArgs is " $runArgs
+
 # get the folder where the script is executing
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
@@ -31,15 +36,16 @@ setfacl -Rdm "u:AzDevOps:rwX" /opt
 echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
 # unzip the agent files
-if !test -f "$dir/bin/Agent.Listener"; then
+zipfile=$(find $dir/vsts-agent*.tar.gz)
+echo "zipfile is " $zipfile
+
+if !(test -f "$dir/bin/Agent.Listener"); then
     echo "Unzipping agent"
-    zipfile=$(find $dir/vsts-agent*.tar.gz)
-    echo "zipfile is " $zipfile
     tar -xvf  $zipfile -C $dir
 fi
 
-cd $dir
 rm $zipfile
+cd $dir
 
 # grant broad permissions in the agent folder
 sudo chmod -R 777 $dir
