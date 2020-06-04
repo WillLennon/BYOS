@@ -551,9 +551,13 @@ def enable_pipelines_agent(config):
     handler_utility.log('Download Pipelines Agent')
     downloadUrl = config["AgentDownloadUrl"]
     handler_utility.log(downloadUrl)
+
     filename = os.path.basename(downloadUrl)
+    handler_utility.log(filename)
+
     agentFile = os.path.join(agentFolder, filename)
     handler_utility.log(agentFile)
+
     urllib.urlretrieve(downloadUrl, agentFile)
 
     # download the enable script
