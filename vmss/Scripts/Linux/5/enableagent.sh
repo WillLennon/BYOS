@@ -10,7 +10,6 @@ runArgs=$4
 
 echo "url is " $url
 echo "pool is " $pool
-echo "token is " $token
 echo "runArgs is " $runArgs
 
 # get the folder where the script is executing
@@ -70,13 +69,6 @@ apt install at
 # configure the build agent
 # calling bash here so the quotation marks around $pool get respected
 echo configuring build agent
-echo $dir
-echo $url
-echo $pool
-echo $token
-
-configArgs = "/bin/bash $dir/config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
-echo $configArgs
 sudo runuser AzDevOps -c "/bin/bash $dir/config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
 
 # install at to be used when we schedule the build agent to run and not wait for it to finish
