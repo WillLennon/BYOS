@@ -597,8 +597,8 @@ def enable_pipelines_agent(config):
     handler_utility.log(arg2List[5])
     handler_utility.log(arg2List[6])
     arg3List = argList+arg2List
-    handler_utility.log(arg2List[0])
-    handler_utility.log(arg2List[9])
+    handler_utility.log(arg3List[0])
+    handler_utility.log(arg3List[9])
 
     enableProcess = subprocess.Popen(arg3List)
 
