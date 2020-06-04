@@ -574,23 +574,19 @@ def enable_pipelines_agent(config):
     set_error_status_and_error_exit(e, RMExtensionStatus.rm_extension_status['DownloadPipelinesAgentError']['operationName'], getattr(e,'message'))
 
   try:
+    # grant executable access to the script    
+    os.chmod(enableFile, 0o777)
+
     # run the enable script
     handler_utility.add_handler_sub_status(Util.HandlerSubStatus('EnablePipelinesAgent'))
     handler_utility.log('Run Pipelines Script')
     handler_utility.log(enableFile)
     enableParameters = config["EnableScriptParameters"]
-    handler_utility.log(enableParameters)
 
-    # grant executable access to the script    
-    os.chmod(enableFile, 0o777)
-
-    argList =  ['/bin/bash', enableFile] + shlex.split(enableParameters)
-    print(argList)
-
+    # run the script and wait for it to complete
     handler_utility.log("running script");
+    argList =  ['/bin/bash', enableFile] + shlex.split(enableParameters)
     enableProcess = subprocess.Popen(argList)
-
-    # wait for the script to complete
     enableProcess.communicate()
 
   except Exception as e:
