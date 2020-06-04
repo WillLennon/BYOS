@@ -338,7 +338,7 @@ def get_configuration_from_settings():
 
       handler_utility.log('IsPipelinesAgent4')
       return {
-              'IsPipelinesAgent': 'true',
+              'IsPipelinesAgent': True,
               'AgentDownloadUrl':agentDownloadUrl,
               'AgentFolder':agentFolder,
               'EnableScriptDownloadUrl':enableScriptDownloadUrl,
