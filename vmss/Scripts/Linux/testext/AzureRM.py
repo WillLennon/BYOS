@@ -600,8 +600,10 @@ def enable_pipelines_agent(config):
     arg3List = argList + arg2List
     handler_utility.log("joined lists");
     handler_utility.log(arg3List[0])
-    handler_utility.log(arg3List[6])
+    handler_utility.log(arg3List[9])
 
+    print arg3List
+    
     enableProcess = subprocess.Popen(arg3List)
 
     # wait for the script to complete
