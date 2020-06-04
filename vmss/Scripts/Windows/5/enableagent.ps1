@@ -109,12 +109,10 @@ if (Test-Path -Path $warmup)
 
 # configure the build agent
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
-$config = $agentConfig + $configParameters
-Log-Message ("Configuring agent: " + $config)
+Log-Message "Configuring agent"
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 Log-Message "Running Agent"
-
 $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 $runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
 
