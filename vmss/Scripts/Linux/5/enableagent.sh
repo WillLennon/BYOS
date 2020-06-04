@@ -52,3 +52,5 @@ fi
 # calling bash here so the quotation marks around $pool get respected
 echo configuring build agent
 sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
+
+sudo runuser AzDevOps -c \"/bin/bash /agent/run.sh $runArgs\"
