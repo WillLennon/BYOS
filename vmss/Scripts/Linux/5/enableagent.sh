@@ -31,10 +31,15 @@ setfacl -Rdm "u:AzDevOps:rwX" /opt
 echo 'AzDevOps ALL=NOPASSWD: ALL' >> /etc/sudoers
 
 # unzip the agent files
-zipfile=$(find $dir/vsts-agent*.tar.gz)
-echo "zipfile is " $zipfile
-tar -xvf  $zipfile -C $dir
+if [! test -f "$dir/bin/Agent.Listener"]; then
+    echo "Unzipping agent"
+    zipfile=$(find $dir/vsts-agent*.tar.gz)
+    echo "zipfile is " $zipfile
+    tar -xvf  $zipfile -C $dir
+fi
+
 cd $dir
+rm $zipfile
 
 # grant broad permissions in the agent folder
 sudo chmod -R 777 $dir
@@ -59,8 +64,8 @@ apt install at
 # configure the build agent
 # calling bash here so the quotation marks around $pool get respected
 echo configuring build agent
-args = "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
-echo $args
+configArgs = "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
+echo $configArgs
 sudo runuser AzDevOps -c "/bin/bash ./config.sh --unattended --url $url --pool \"$pool\" --auth pat --token $token --acceptTeeEula --replace"
 
 # install at to be used when we schedule the build agent to run and not wait for it to finish
