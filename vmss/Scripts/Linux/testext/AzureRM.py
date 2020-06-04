@@ -555,13 +555,8 @@ def enable_pipelines_agent(config):
     handler_utility.log('Download Pipelines Agent')
     downloadUrl = config["AgentDownloadUrl"]
     handler_utility.log(downloadUrl)
-
     filename = os.path.basename(downloadUrl)
-    handler_utility.log(filename)
-
     agentFile = os.path.join(agentFolder, filename)
-    handler_utility.log(agentFile)
-
     urllib.urlretrieve(downloadUrl, agentFile)
 
     # download the enable script
@@ -570,7 +565,6 @@ def enable_pipelines_agent(config):
     handler_utility.log(downloadUrl)
     filename = os.path.basename(downloadUrl)
     enableFile = os.path.join(agentFolder, filename)
-    handler_utility.log(enableFile)
     urllib.urlretrieve(downloadUrl, enableFile)
 
   except Exception as e:
@@ -583,7 +577,11 @@ def enable_pipelines_agent(config):
     handler_utility.add_handler_sub_status(Util.HandlerSubStatus('EnablePipelinesAgent'))
     handler_utility.log('Run Pipelines Script')
     enableParameters = config["EnableScriptParameters"]
+    handler_utility.log(enableFile)
     handler_utility.log(enableParameters)
+    
+    handler_utility.log("chmod")
+    os.chmod(enableFile, 0o777)
     enableProcess = subprocess.Popen(['/bin/bash', '-c', enableFile, enableParameters])
 
     # wait for the script to complete
