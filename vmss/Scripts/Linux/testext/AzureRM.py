@@ -547,6 +547,10 @@ def enable_pipelines_agent(config):
     agentFolder = config["AgentFolder"]
     handler_utility.log(agentFolder)
 
+    if(not os.path.isdir(agentFolder)):
+      handler_utility.log('Agent folder does not exist. Creating it.')
+      os.makedirs(agentFolder, 0o777)
+
     # download the agent tar file
     handler_utility.log('Download Pipelines Agent')
     downloadUrl = config["AgentDownloadUrl"]
