@@ -6,6 +6,7 @@
 url=$1
 pool=$2
 token=$3
+runArgs=$4
 
 # Create our user account
 echo creating AzDevOps account
