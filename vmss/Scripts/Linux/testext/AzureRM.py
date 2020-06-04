@@ -584,8 +584,23 @@ def enable_pipelines_agent(config):
     # grant executable access to the script    
     os.chmod(enableFile, 0o777)
 
-    argList = ['/bin/bash -c', enableFile] + shlex.split(enableParameters)
-    enableProcess = subprocess.Popen(argList)
+    argList = ['/bin/bash', '-c', enableFile]
+    handler_utility.log(argList[0])
+    handler_utility.log(argList[1])
+    handler_utility.log(argList[2])
+    arg2List = shlex.split(enableParameters)
+    handler_utility.log(arg2List[0])
+    handler_utility.log(arg2List[1])
+    handler_utility.log(arg2List[2])
+    handler_utility.log(arg2List[3])
+    handler_utility.log(arg2List[4])
+    handler_utility.log(arg2List[5])
+    handler_utility.log(arg2List[6])
+    arg3List = argList+arg2List
+    handler_utility.log(arg2List[0])
+    handler_utility.log(arg2List[9])
+
+    enableProcess = subprocess.Popen(arg3List)
 
     # wait for the script to complete
     enableProcess.communicate()
