@@ -541,18 +541,18 @@ def test_extension_settings_are_same_as_disabled_version():
 
 def enable_pipelines_agent(config):
   try:
-    global handler_utility
-    handler_utility = Util.HandlerUtility(waagent.Log, waagent.Error)
-
+    handler_utility.log('Enable Pipelines Agent')
     handler_utility.add_handler_sub_status(Util.HandlerSubStatus('DownloadPipelinesAgent'))
     agentFolder = config["AgentFolder"]
 
     # download the agent tar file
+    handler_utility.log('Download Pipelines Agent')
     downloadUrl = config["AgentDownloadUrl"]
     agentFile = os.path.join(agentFolder, os.path.basename(downloadUrl))
     urllib.urlretrieve(downloadUrl, agentFile)
 
     # download the enable script
+    handler_utility.log('Download Pipelines Script')
     downloadUrl = config["EnableScriptDownloadUrl"]
     enableFile = os.path.join(agentFolder, os.path.basename(downloadUrl))
     urllib.urlretrieve(downloadUrl, enableFile)
@@ -563,6 +563,7 @@ def enable_pipelines_agent(config):
   try:
     # run the enable script
     handler_utility.add_handler_sub_status(Util.HandlerSubStatus('EnablePipelinesAgent'))
+    handler_utility.log('Run Pipelines Script')
     enableParameters = config["EnableScriptParameters"]
     enableProcess = subprocess.Popen(['/bin/bash', '-c', enableFile, enableParameters])
 
