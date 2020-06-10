@@ -599,10 +599,10 @@ def enable_pipelines_agent(config):
   handler_utility.log('Pipelines Agent is enabled.')
 
 def enable():
-  handler_utility.set_handler_status(Util.HandlerStatus('Enabling'))
+  handler_utility.set_handler_status(Util.HandlerStatus('Installing'))
   pre_validation_checks()
   config = get_configuration_from_settings()
-  if (config['IsPipelinesAgent']):
+  if(config.get('IsPipelinesAgent') != None):
     enable_pipelines_agent(config)
     return
 
@@ -619,7 +619,7 @@ def enable():
     remove_existing_agent_if_required(config)
     download_agent_if_required(config)
     configure_agent_if_required(config)
-    handler_utility.set_handler_status(Util.HandlerStatus('Enabled'))
+    handler_utility.set_handler_status(Util.HandlerStatus('Installed'))
     add_agent_tags(config)
     handler_utility.log('Extension is enabled.')
   
@@ -633,7 +633,7 @@ def disable():
   ConfigureDeploymentAgent.set_logger(handler_utility.log)
   config = get_configuration_from_settings()
 
-  if (config['IsPipelinesAgent']):
+  if(config.get('IsPipelinesAgent') != None):
     return
 
   handler_utility.log('Disable command is no-op for agent')
@@ -647,7 +647,7 @@ def disable():
 def uninstall():
   config = get_configuration_from_settings()
 
-  if (config['IsPipelinesAgent']):
+  if(config.get('IsPipelinesAgent') != None):
     return
 
   global configured_agent_exists
@@ -669,7 +669,7 @@ def uninstall():
 def update():
   config = get_configuration_from_settings()
 
-  if (config['IsPipelinesAgent']):
+  if(config.get('IsPipelinesAgent') != None):
     return
 
   create_extension_update_file()
