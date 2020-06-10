@@ -314,22 +314,27 @@ def get_configuration_from_settings():
 
     # if this is a pipelines agent, read the settings and return quickly
     if(public_settings.has_key('IsPipelinesAgent')):
-
+      handler_utility.log("IsPipelinesAgent")
       # read pipelines agent settings
       agentDownloadUrl = public_settings['AgentDownloadUrl']
+      handler_utility.log(agentDownloadUrl)
       handler_utility.verify_input_not_null('AgentDownloadUrl', agentDownloadUrl)
 
       agentFolder = public_settings['AgentFolder']
+      handler_utility.log(agentFolder)
       handler_utility.verify_input_not_null('AgentFolder', agentFolder)
 
       enableScriptDownloadUrl = public_settings['EnableScriptDownloadUrl']
+      handler_utility.log(enableScriptDownloadUrl)
       handler_utility.verify_input_not_null('EnableScriptDownloadUrl', enableScriptDownloadUrl)
 
       # for testing, first try to get the script parameters from the public settings
       # in production they will be in the protected settings
       enableScriptParameters = public_settings['EnableScriptParameters']
+      handler_utility.log(enableScriptParameters)
       if((enableScriptParameters == None) or (enableScriptParameters == '')):
         enableScriptParameters = protected_settings['EnableScriptParameters']
+        handler_utility.log(enableScriptParameters)
       handler_utility.verify_input_not_null('EnableScriptParameters', enableScriptParameters)
 
       return {
@@ -341,6 +346,7 @@ def get_configuration_from_settings():
             }
 
     # continue with deployment agent settings
+    handler_utility.log("continue with deployment agent")
     pat_token = ''
     if((protected_settings.__class__.__name__ == 'dict') and protected_settings.has_key('PATToken')):
       pat_token = protected_settings['PATToken']
