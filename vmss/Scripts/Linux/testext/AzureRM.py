@@ -312,6 +312,8 @@ def get_configuration_from_settings():
     if(protected_settings == None):
       protected_settings = {}
 
+    handler_utility.log("READ SETTINGS")
+        
     # if this is a pipelines agent, read the settings and return quickly
     if(public_settings.has_key('IsPipelinesAgent')):
       handler_utility.log("IsPipelinesAgent")
@@ -606,6 +608,8 @@ def enable_pipelines_agent(config):
 
 def enable():
   handler_utility.set_handler_status(Util.HandlerStatus('Installing'))
+  handler_utility.log("ENABLE")
+
   pre_validation_checks()
   config = get_configuration_from_settings()
   if(config.get('IsPipelinesAgent') != None):
