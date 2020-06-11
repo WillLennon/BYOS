@@ -312,11 +312,12 @@ def get_configuration_from_settings():
     if(protected_settings == None):
       protected_settings = {}
 
-    handler_utility.log("get configuration from settings")
+    handler_utility.log("get_configuration_from_settings")
+
     # If this is a pipelines agent, read the settings and return quickly
-    #   # Note that the pipelines settings come over as camelCase
+    # Note that the pipelines settings come over as camelCase
     if(public_settings.has_key('isPipelinesAgent')):
-      handler_utility.log("isPipelinesAgent")
+      handler_utility.log("Is Pipelines Agent")
 
       # read pipelines agent settings
       agentDownloadUrl = public_settings['agentDownloadUrl']
@@ -344,8 +345,7 @@ def get_configuration_from_settings():
             }
 
     # continue with deployment agent settings
-    handler_utility.log("NOT PipelinesAgent")
-
+    handler_utility.log("Is Deployment Agent")
     pat_token = ''
     if((protected_settings.__class__.__name__ == 'dict') and protected_settings.has_key('PATToken')):
       pat_token = protected_settings['PATToken']
