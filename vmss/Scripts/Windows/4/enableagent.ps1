@@ -58,35 +58,34 @@ if (!(Test-Path -Path $agentExe))
 Log-Message  "Creating AzDevOps account"
 $username = 'AzDevOps'
 $password = (New-Guid).ToString()
-#$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
 
 if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
 {
-  Log-Message "Creating AzDevOps user"
-  New-LocalUser -Name $username -Password $securePassword
+   Log-Message "Creating AzDevOps user"
+   New-LocalUser -Name $username -Password $securePassword
 }
 else
 {
-  Log-Message "Setting AzDevOps password"
-  Set-LocalUser -Name $username -Password $securePassword 
+   Log-Message "Setting AzDevOps password"
+   Set-LocalUser -Name $username -Password $securePassword 
 }
 if ((Get-LocalGroup -Name "Users" -ErrorAction Ignore) -and
     !(Get-LocalGroupMember -Group "Users" -Member $username -ErrorAction Ignore))
 {
-  Log-Message "Adding AzDevOps to Users"
-  Add-LocalGroupMember -Group "Users" -Member $username
+   Log-Message "Adding AzDevOps to Users"
+   Add-LocalGroupMember -Group "Users" -Member $username
 }
 if ((Get-LocalGroup -Name "Administrators" -ErrorAction Ignore) -and
     !(Get-LocalGroupMember -Group "Administrators" -Member $username -ErrorAction Ignore))
 {
-  Log-Message "Adding AzDevOps to Administrators"
-  Add-LocalGroupMember -Group "Administrators" -Member $username
+   Log-Message "Adding AzDevOps to Administrators"
+   Add-LocalGroupMember -Group "Administrators" -Member $username
 }
 if ((Get-LocalGroup -Name "docker-users" -ErrorAction Ignore) -and
     !(Get-LocalGroupMember -Group "docker-users" -Member $username -ErrorAction Ignore))
 {
-  Log-Message "Adding AzDevOps to docker-users"
-  Add-LocalGroupMember -Group "docker-users" -Member $username
+   Log-Message "Adding AzDevOps to docker-users"
+   Add-LocalGroupMember -Group "docker-users" -Member $username
 }
 
 # run the customer warmup script if it exists
@@ -120,7 +119,6 @@ catch
    exit -102
 }
 
-#$credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 $runCmd = Join-Path -Path $agentDir -ChildPath "run.cmd"
 Log-Message "Scheduling agent to run"
 
