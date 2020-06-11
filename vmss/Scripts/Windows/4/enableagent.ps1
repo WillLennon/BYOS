@@ -116,13 +116,20 @@ Log-Message "Running Agent"
 $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 $runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
 
-if([string]::IsNullOrEmpty($runArgs))
+try
 {
-   Start-Process -FilePath $runCmd -Credential $credential
+   if([string]::IsNullOrEmpty($runArgs))
+   {
+      Start-Process -FilePath $runCmd -Credential $credential
+   }
+   else
+   {
+      Start-Process -FilePath $runCmd -Credential $credential -ArgumentList $runArgs
+   }
 }
-else
+catch
 {
-   Start-Process -FilePath $runCmd -Credential $credential -ArgumentList $runArgs
+    Log-Message $Error[0]
+    exit -102
 }
-
 Log-Message "Finished"
