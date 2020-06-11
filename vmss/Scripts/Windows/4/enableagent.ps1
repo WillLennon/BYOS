@@ -120,9 +120,9 @@ catch
    exit -102
 }
 
-Log-Message "Running Agent"
 $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 $runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
+Log-Message "Running Agent " + $runCmd
 
 try
 {
