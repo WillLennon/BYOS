@@ -58,6 +58,7 @@ if (!(Test-Path -Path $agentExe))
 Log-Message  "Creating AzDevOps account"
 $username = 'AzDevOps'
 $password = (New-Guid).ToString()
+$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
 
 if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
 {
