@@ -70,6 +70,10 @@ else
    Log-Message "Setting AzDevOps password"
    Set-LocalUser -Name $username -Password $securePassword 
 }
+
+# Confirm the local user exists or abort if not
+Get-LocalUser -Name $username
+
 if ((Get-LocalGroup -Name "Users" -ErrorAction Ignore) -and
     !(Get-LocalGroupMember -Group "Users" -Member $username -ErrorAction Ignore))
 {
