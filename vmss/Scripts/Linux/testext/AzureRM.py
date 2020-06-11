@@ -312,32 +312,28 @@ def get_configuration_from_settings():
     if(protected_settings == None):
       protected_settings = {}
 
-    handler_utility.log("READ SETTINGS")
-        
-    # if this is a pipelines agent, read the settings and return quickly
-    if(public_settings.has_key('IsPipelinesAgent')):
-      handler_utility.log("IsPipelinesAgent")
+    handler_utility.log("get configuration from settings")
+    # If this is a pipelines agent, read the settings and return quickly
+    #   # Note that the pipelines settings come over as camelCase
+    if(public_settings.has_key('isPipelinesAgent')):
+      handler_utility.log("isPipelinesAgent")
+
       # read pipelines agent settings
-      agentDownloadUrl = public_settings['AgentDownloadUrl']
-      handler_utility.log(agentDownloadUrl)
-      handler_utility.verify_input_not_null('AgentDownloadUrl', agentDownloadUrl)
+      agentDownloadUrl = public_settings['agentDownloadUrl']
+      handler_utility.verify_input_not_null('agentDownloadUrl', agentDownloadUrl)
 
-      agentFolder = public_settings['AgentFolder']
-      handler_utility.log(agentFolder)
-      handler_utility.verify_input_not_null('AgentFolder', agentFolder)
+      agentFolder = public_settings['agentFolder']
+      handler_utility.verify_input_not_null('agentFolder', agentFolder)
 
-      enableScriptDownloadUrl = public_settings['EnableScriptDownloadUrl']
-      handler_utility.log(enableScriptDownloadUrl)
-      handler_utility.verify_input_not_null('EnableScriptDownloadUrl', enableScriptDownloadUrl)
+      enableScriptDownloadUrl = public_settings['enableScriptDownloadUrl']
+      handler_utility.verify_input_not_null('enableScriptDownloadUrl', enableScriptDownloadUrl)
 
       # for testing, first try to get the script parameters from the public settings
       # in production they will be in the protected settings
-      enableScriptParameters = public_settings['EnableScriptParameters']
-      handler_utility.log(enableScriptParameters)
+      enableScriptParameters = public_settings['enableScriptParameters']
       if((enableScriptParameters == None) or (enableScriptParameters == '')):
-        enableScriptParameters = protected_settings['EnableScriptParameters']
-        handler_utility.log(enableScriptParameters)
-      handler_utility.verify_input_not_null('EnableScriptParameters', enableScriptParameters)
+        enableScriptParameters = protected_settings['enableScriptParameters']
+      handler_utility.verify_input_not_null('enableScriptParameters', enableScriptParameters)
 
       return {
               'IsPipelinesAgent': 'true',
@@ -348,7 +344,8 @@ def get_configuration_from_settings():
             }
 
     # continue with deployment agent settings
-    handler_utility.log("continue with deployment agent")
+    handler_utility.log("NOT PipelinesAgent")
+
     pat_token = ''
     if((protected_settings.__class__.__name__ == 'dict') and protected_settings.has_key('PATToken')):
       pat_token = protected_settings['PATToken']
@@ -608,8 +605,6 @@ def enable_pipelines_agent(config):
 
 def enable():
   handler_utility.set_handler_status(Util.HandlerStatus('Installing'))
-  handler_utility.log("ENABLE")
-
   pre_validation_checks()
   config = get_configuration_from_settings()
   if(config.get('IsPipelinesAgent') != None):
