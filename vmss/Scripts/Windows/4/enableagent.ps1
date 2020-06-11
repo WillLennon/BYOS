@@ -72,7 +72,11 @@ else
 }
 
 # Confirm the local user exists or abort if not
-Get-LocalUser -Name $username
+if (!(Get-LocalUser -Name $username))
+{
+   Log-Message "Failed to create AzDevOps user"
+   exit -105
+}
 
 if ((Get-LocalGroup -Name "Users" -ErrorAction Ignore) -and
     !(Get-LocalGroupMember -Group "Users" -Member $username -ErrorAction Ignore))
