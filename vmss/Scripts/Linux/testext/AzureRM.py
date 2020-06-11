@@ -558,7 +558,8 @@ def enable_pipelines_agent(config):
       os.makedirs(agentFolder, 0o777)
 
     # download the agent tar file
-    handler_utility.log('Download Pipelines Agent')
+    handler_utility.add_handler_sub_status(Util.HandlerSubStatus('DownloadPipelinesZip'))
+    handler_utility.log('Download Pipelines Zip')
     downloadUrl = config["AgentDownloadUrl"]
     handler_utility.log(downloadUrl)
     filename = os.path.basename(downloadUrl)
@@ -566,6 +567,7 @@ def enable_pipelines_agent(config):
     urllib.urlretrieve(downloadUrl, agentFile)
 
     # download the enable script
+    handler_utility.add_handler_sub_status(Util.HandlerSubStatus('DownloadPipelinesScript'))
     handler_utility.log('Download Pipelines Script')
     downloadUrl = config["EnableScriptDownloadUrl"]
     handler_utility.log(downloadUrl)
