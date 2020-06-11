@@ -121,18 +121,18 @@ catch
 }
 
 #$credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-$runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
+$runCmd = Join-Path -Path $agentDir -ChildPath "run.cmd"
 Log-Message "Scheduling agent to run"
 
 try
 {
    if([string]::IsNullOrEmpty($runArgs))
    {
-      $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $PSScriptRoot
+      $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir
    }
    else
    {
-      $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $PSScriptRoot $runArgs
+      $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir $runArgs
    }
 
    $start1 = (Get-Date).AddSeconds(10)
