@@ -110,7 +110,15 @@ if (Test-Path -Path $warmup)
 # configure the build agent
 $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
 Log-Message "Configuring agent"
-Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+try
+{
+   Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+}
+catch
+{
+   Log-Message $Error[0]
+   exit -102
+}
 
 Log-Message "Running Agent"
 $credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
@@ -130,6 +138,6 @@ try
 catch
 {
     Log-Message $Error[0]
-    exit -102
+    exit -103
 }
 Log-Message "Finished"
