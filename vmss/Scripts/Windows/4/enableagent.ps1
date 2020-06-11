@@ -58,7 +58,7 @@ if (!(Test-Path -Path $agentExe))
 Log-Message  "Creating AzDevOps account"
 $username = 'AzDevOps'
 $password = (New-Guid).ToString()
-$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
+#$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
 
 if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
 {
@@ -120,19 +120,33 @@ catch
    exit -102
 }
 
-$credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
+#$credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
 $runCmd = Join-Path -Path $PSScriptRoot -ChildPath "run.cmd"
-Log-Message ("Running Agent " + $runCmd)
+Log-Message "Scheduling agent to run"
 
 try
 {
    if([string]::IsNullOrEmpty($runArgs))
    {
-      Start-Process -FilePath $runCmd -Credential $credential
+      $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $PSScriptRoot
    }
    else
    {
-      Start-Process -FilePath $runCmd -Credential $credential -ArgumentList $runArgs
+      $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $PSScriptRoot $runArgs
+   }
+
+   $start1 = (Get-Date).AddSeconds(10)
+   $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
+
+   $windows = Get-WindowsEdition -Online
+   if ($windows.Edition -like '*datacenter*' -or
+       $windows.Edition -like '*server*' )
+   {
+      Register-ScheduledTask -TaskName "PipelinesAgent" -User $username -Password $password -Trigger $time1 -Action $cmd1 -Force
+   }
+   else
+   {
+      Register-ScheduledTask -TaskName "PipelinesAgent" -User System -Trigger $time1 -Action $cmd1 -Force
    }
 }
 catch
