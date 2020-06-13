@@ -332,8 +332,13 @@ def get_configuration_from_settings():
       # for testing, first try to get the script parameters from the public settings
       # in production they will be in the protected settings
       enableScriptParameters = public_settings['enableScriptParameters']
-      if((enableScriptParameters == None) or (enableScriptParameters == '')):
+      handler_utility.log("enableScriptParameters")
+      handler_utility.log(enableScriptParameters)
+      if((enableScriptParameters == '') and (protected_settings.has_key('enableScriptParameters'))):
         enableScriptParameters = protected_settings['enableScriptParameters']
+        handler_utility.log("protected enableScriptParameters")
+        handler_utility.log(enableScriptParameters)
+
       handler_utility.verify_input_not_null('enableScriptParameters', enableScriptParameters)
 
       return {
@@ -579,6 +584,7 @@ def enable_pipelines_agent(config):
     handler_utility.log(getattr(e,'message'))
     handler_utility.log(e)
     set_error_status_and_error_exit(e, RMExtensionStatus.rm_extension_status['DownloadPipelinesAgentError']['operationName'], getattr(e,'message'))
+    return
 
   try:
     # grant executable access to the script    
@@ -600,9 +606,10 @@ def enable_pipelines_agent(config):
     handler_utility.log(getattr(e,'message'))
     handler_utility.log(e)
     set_error_status_and_error_exit(e, RMExtensionStatus.rm_extension_status['EnablePipelinesAgentError']['operationName'], getattr(e,'message'))
+    return
 
   handler_utility.add_handler_sub_status(Util.HandlerSubStatus('EnablePipelinesAgentSuccess'))
-  handler_utility.set_handler_status(Util.HandlerStatus('Enabled'))
+  handler_utility.set_handler_status(Util.HandlerStatus('Enabled', 'success'))
   handler_utility.log('Pipelines Agent is enabled.')
 
 def enable():
