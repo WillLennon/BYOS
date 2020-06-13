@@ -333,7 +333,6 @@ def get_configuration_from_settings():
       # in production they will be in the protected settings
       enableScriptParameters = public_settings['enableScriptParameters']
       handler_utility.log("enableScriptParameters")
-      handler_utility.log(enableScriptParameters)
       if((enableScriptParameters == '') and (protected_settings.has_key('enableScriptParameters'))):
         enableScriptParameters = protected_settings['enableScriptParameters']
         handler_utility.log("protected enableScriptParameters")
