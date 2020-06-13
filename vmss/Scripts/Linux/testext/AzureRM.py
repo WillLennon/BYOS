@@ -313,7 +313,8 @@ def get_configuration_from_settings():
       protected_settings = {}
 
     handler_utility.log("get_configuration_from_settings")
-
+    ####################################################################################################################################
+    ####################################################################################################################################
     # If this is a pipelines agent, read the settings and return quickly
     # Note that the pipelines settings come over as camelCase
     if(public_settings.has_key('isPipelinesAgent')):
@@ -354,6 +355,8 @@ def get_configuration_from_settings():
               'EnableScriptParameters':enableScriptParameters
             }
 
+    ####################################################################################################################################
+    ####################################################################################################################################
     # continue with deployment agent settings
     handler_utility.log("Is Deployment Agent")
     pat_token = ''
