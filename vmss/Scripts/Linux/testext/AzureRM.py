@@ -332,18 +332,17 @@ def get_configuration_from_settings():
 
       # for testing, first try to get the script parameters from the public settings
       # in production they will be in the protected settings
-      enableScriptParameters = public_settings['enableScriptParameters']
-      handler_utility.log("public enableScriptParameters")
+      handler_utility.log("looking for enableScriptParameters")
 
-      if((enableScriptParameters == '') and (protected_settings.has_key('enableScriptParameters'))):
-        handler_utility.log("public enableScriptParameters is EMPTY")
-
-        if((protected_settings.__class__.__name__ == 'dict') and protected_settings.has_key('enableScriptParameters')):
-          handler_utility.log("protected enableScriptParameters exists")
-          enableScriptParameters = protected_settings['enableScriptParameters']
-  
+      if(protected_settings.has_key('enableScriptParameters')):
         handler_utility.log("protected enableScriptParameters")
-        handler_utility.log(enableScriptParameters)
+        enableScriptParameters = protected_settings['enableScriptParameters']
+
+      if(public_settings.has_key('enableScriptParameters')):
+        handler_utility.log("public enableScriptParameters")
+        enableScriptParameters = public_settings['enableScriptParameters']
+
+      handler_utility.log("validating enableScriptParameters")
 
       handler_utility.verify_input_not_null('enableScriptParameters', enableScriptParameters)
 
