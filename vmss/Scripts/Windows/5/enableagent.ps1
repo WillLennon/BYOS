@@ -116,7 +116,7 @@ if (Test-Path -Path $warmup)
 }
 
 # configure the build agent
-$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace  --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
+$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
 Log-Message "Configuring agent"
 try
 {
