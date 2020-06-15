@@ -116,7 +116,7 @@ if (Test-Path -Path $warmup)
 }
 
 # configure the build agent
-$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
+$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace  --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
 Log-Message "Configuring agent"
 try
 {
@@ -128,37 +128,8 @@ catch
    exit -102
 }
 
-$runCmd = Join-Path -Path $agentDir -ChildPath "run.cmd"
-Log-Message "Scheduling agent to run"
+Log-Message "Rebooting"
 
-try
-{
-   if([string]::IsNullOrEmpty($runArgs))
-   {
-      $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir
-   }
-   else
-   {
-      $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir $runArgs
-   }
+Restart-Computer
 
-   $start1 = (Get-Date).AddSeconds(10)
-   $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
-
-   $windows = Get-WindowsEdition -Online
-   if ($windows.Edition -like '*datacenter*' -or
-       $windows.Edition -like '*server*' )
-   {
-      Register-ScheduledTask -TaskName "PipelinesAgent" -User $username -Password $password -Trigger $time1 -Action $cmd1 -Force
-   }
-   else
-   {
-      Register-ScheduledTask -TaskName "PipelinesAgent" -User System -Trigger $time1 -Action $cmd1 -Force
-   }
-}
-catch
-{
-    Log-Message $Error[0]
-    exit -103
-}
 Log-Message "Finished"
