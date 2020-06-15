@@ -54,6 +54,11 @@ if (!(Test-Path -Path $agentExe))
    }
 }
 
+# delete old configuration files if present
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".agent") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials_rsaparams") -Force -ErrorAction Ignore
+
 # create administrator account
 Log-Message  "Creating AzDevOps account"
 $username = 'AzDevOps'
