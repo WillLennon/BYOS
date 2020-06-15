@@ -55,9 +55,9 @@ if (!(Test-Path -Path $agentExe))
 }
 
 # delete old configuration files if present
-# Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".agent") -Force -ErrorAction Ignore
-# Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials") -Force -ErrorAction Ignore
-# Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials_rsaparams") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".agent") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials_rsaparams") -Force -ErrorAction Ignore
 
 # create administrator account
 Log-Message  "Creating AzDevOps account"
@@ -133,8 +133,8 @@ catch
    exit -102
 }
 
-Log-Message "Rebooting"
+Log-Message "Rebooting in 5 seconds"
 
-Restart-Computer
+Start-Process -FilePath PowerShell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Unrestricted -Command &{'Start-Sleep 5; Restart-Computer;'}"
 
 Log-Message "Finished"
