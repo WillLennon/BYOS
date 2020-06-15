@@ -38,7 +38,7 @@ Log-Message ("agentExe: " + $agentExe)
 Log-Message ("agentZip: " + $agentZip)
 Log-Message ("agentConfig: " + $agentConfig)
 
-#unzip the agent if it doesn't exist already
+# unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
 {
    Log-Message "Unzipping Agent"
@@ -53,6 +53,11 @@ if (!(Test-Path -Path $agentExe))
       exit -100
    }
 }
+
+# delete old configuration files if present
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".agent") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials_rsaparams") -Force -ErrorAction Ignore
 
 # create administrator account
 Log-Message  "Creating AzDevOps account"
