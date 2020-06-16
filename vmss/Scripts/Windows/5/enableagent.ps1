@@ -135,5 +135,5 @@ catch
 
 Log-Message "Rebooting in 5 seconds"
 
-Start-Process -FilePath PowerShell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Unrestricted -Command &{Start-Sleep 5; Restart-Computer;}"
+Start-Process -FilePath PowerShell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Unrestricted -Command &{Start-Sleep 5; Restart-Computer -Force;}"
 Log-Message "Finished"
