@@ -47,8 +47,8 @@ Log-Message ("Windows edition: " + $windows.Edition)
 
 # Determine if we should run as local user AzDevOps or as LocalSystem
 # We can only run as the local user if RunArgs is empty and this is Windows 10 Server/DataCenter
-$runAsUser = (([String]::IsNullOrEmpty($runArgs))
-              -and ($version -like '10.*')
+$runAsUser = ([String]::IsNullOrEmpty($runArgs) `
+              -and ($version -like '10.*') `
               -and ($windows.Edition -like '*datacenter*' -or $windows.Edition -like '*server*' ))
 Log-Message ("runAsUser: " + $runAsUser)
 
