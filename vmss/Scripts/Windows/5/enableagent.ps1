@@ -94,7 +94,6 @@ if (Test-Path -Path $warmup)
 if ($runAsUser)
 {
    # create administrator account
-   Log-Message  "Creating AzDevOps account"
    $username = 'AzDevOps'
    $password = (New-Guid).ToString()
    $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
