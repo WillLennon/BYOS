@@ -1,3 +1,5 @@
+#enableagent.ps1 v5
+
 param
 (
    [string]$url,
