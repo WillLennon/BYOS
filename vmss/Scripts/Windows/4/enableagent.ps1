@@ -152,9 +152,10 @@ try
    $start1 = (Get-Date).AddSeconds(10)
    $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
 
+   $version = (Get-WmiObject Win32_OperatingSystem).Version
    $windows = Get-WindowsEdition -Online
-   if ($windows.Edition -like '*datacenter*' -or
-       $windows.Edition -like '*server*' )
+   if ($version -like '10.*' -and 
+      ($windows.Edition -like '*datacenter*' -or $windows.Edition -like '*server*' ))
    {
       Register-ScheduledTask -TaskName "PipelinesAgent" -User $username -Password $password -Trigger $time1 -Action $cmd1 -Force
    }
