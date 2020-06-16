@@ -121,7 +121,8 @@ if (Test-Path -Path $warmup)
 }
 
 # configure the build agent
-$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
+#$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
+$configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
 Log-Message "Configuring agent"
 try
 {
@@ -133,7 +134,7 @@ catch
    exit -102
 }
 
-Log-Message "Rebooting in 5 seconds"
+#Log-Message "Rebooting in 5 seconds"
 
-Start-Process -FilePath PowerShell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Unrestricted -Command &{Start-Sleep 5; Restart-Computer -Force;}"
-Log-Message "Finished"
+#Start-Process -FilePath PowerShell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Unrestricted -Command &{Start-Sleep 5; Restart-Computer -Force;}"
+#Log-Message "Finished"
