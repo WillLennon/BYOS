@@ -68,11 +68,6 @@ if (!(Test-Path -Path $agentExe))
    }
 }
 
-# delete old configuration files if present
-Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".agent") -Force -ErrorAction Ignore
-Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials") -Force -ErrorAction Ignore
-Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials_rsaparams") -Force -ErrorAction Ignore
-
 # Run the customer warmup script if it exists
 # Note that this runs as Local System
 $warmup = "\warmup.ps1"
