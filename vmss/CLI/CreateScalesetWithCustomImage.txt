@@ -73,7 +73,7 @@ $osType = ''         # OS Type of custom Vhd. Windows or Linux
      az vm delete --resource-group $resourceGroup --name $vmName 
      
 4. Create the scaleset based on the custom VM image:
-     az vmss create --resource-group $resourceGroup --name $scaleSetName --image $imageName --admin-username $adminUsername --admin-password $adminPassword --vm-sku $vmSku --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --single-placement-group false --platform-fault-domain-count 1 --load-balancer '""'
+     az vmss create --resource-group $resourceGroup --name $scaleSetName --image $imageName --admin-username $adminUsername --admin-password $adminPassword --vm-sku $vmSku --instance-count 2 --disable-overprovision --upgrade-policy-mode manual --single-placement-group false --platform-fault-domain-count 1 --load-balancer '""' --ephemeral-os-disk true --os-disk-caching readonly
      
 5. Navigate to portal.azure.com and verify that two VMs are created, have different names, and reach the Succeeded state.
 
