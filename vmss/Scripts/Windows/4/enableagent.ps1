@@ -1,11 +1,10 @@
-#enableagent.ps1 v4==v5
-
 param
 (
    [string]$url,
    [string]$pool,
    [string]$token,
-   [string]$runArgs
+   [string]$runArgs,
+   [switch]$interactive
 )
 
 function Log-Message 
@@ -26,7 +25,7 @@ function Log-Message
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $agentDir = $PSScriptRoot
 
-Log-Message "Installing extension"
+Log-Message "Installing extension v4"
 Log-Message ("URL: " + $url)
 Log-Message ("Pool: " + $pool) 
 Log-Message ("runArgs: " + $runArgs)
@@ -67,6 +66,11 @@ if (!(Test-Path -Path $agentExe))
       exit -100
    }
 }
+
+# delete old configuration files if present
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".agent") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials") -Force -ErrorAction Ignore
+Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials_rsaparams") -Force -ErrorAction Ignore
 
 # Run the customer warmup script if it exists
 # Note that this runs as Local System
@@ -130,23 +134,58 @@ if ($runAsUser)
       Add-LocalGroupMember -Group "docker-users" -Member $username
    }
 
-   # configure the build agent to autologon and run as AzDevOps
-   $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
-   Log-Message "Configuring agent to autologon as run as AzDevOps"
-   try
+   if ($interactive)
    {
-      Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+      Log-Message "Configuring agent to reboot, autologon, and run unelevated as AzDevOps with interactive UI"
+      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
+      try
+      {
+         Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+      }
+      catch
+      {
+         Log-Message $Error[0]
+         exit -102
+      }
    }
-   catch
+   else
    {
-      Log-Message $Error[0]
-      exit -102
+      Log-Message "Configuring agent to run elevated as AzDevOps without interactive UI"
+      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
+      try
+      {
+         Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+      }
+      catch
+      {
+         Log-Message $Error[0]
+         exit -106
+      }
+
+      try
+      {
+         if([string]::IsNullOrEmpty($runArgs))
+         {
+            $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir
+         }
+         else
+         {
+            $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir $runArgs
+         }
+
+         $start1 = (Get-Date).AddSeconds(10)
+         $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
+         Register-ScheduledTask -TaskName "PipelinesAgent" -User $username -Password $password -RunLevel Highest -Trigger $time1 -Action $cmd1 -Force
+      }
+      catch
+      {
+          Log-Message $Error[0]
+          exit -108
+      }
    }
 }
 else
 {
-   # run as Local System
-   # configure the build agent
    Log-Message "Configuring agent to run as Local System"
 
    $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
@@ -157,7 +196,7 @@ else
    catch
    {
       Log-Message $Error[0]
-      exit -102
+      exit -107
    }
 
    $runCmd = Join-Path -Path $agentDir -ChildPath "run.cmd"
