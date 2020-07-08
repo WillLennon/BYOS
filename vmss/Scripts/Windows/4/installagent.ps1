@@ -27,55 +27,11 @@ $runFileSource = Get-ChildItem -Path .\* -Recurse -Include $runFile
 $runFileDest = Join-Path -Path $agentDir -ChildPath $runFile
 Copy-item $runFileSource $runFileDest
 
-# TESTING. copy install script to the agent folder
-$installFile = "installagent.ps1"
-$installFileSource = Get-ChildItem -Path .\* -Recurse -Include $installFile
-$installFileDest = Join-Path -Path $agentDir -ChildPath $installFile
-Copy-item $installFileSource $installFileDest
-
 #unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
 {
    Write-Host "Unzipping agent"
    [System.IO.Compression.ZipFile]::ExtractToDirectory($agentZip, $agentDir)
-}
-
-# create administrator account
-$username = 'AzDevOps'
-$password = (New-Guid).ToString()
-$securePassword = ConvertTo-SecureString $password -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
-{
-  New-LocalUser -Name $username -Password $securePassword
-}
-else
-{
-  Set-LocalUser -Name $username -Password $securePassword 
-}
-if ((Get-LocalGroup -Name "Users" -ErrorAction Ignore) -and
-    !(Get-LocalGroupMember -Group "Users" -Member $username -ErrorAction Ignore))
-{
-  Add-LocalGroupMember -Group "Users" -Member $username
-}
-if ((Get-LocalGroup -Name "Administrators" -ErrorAction Ignore) -and
-    !(Get-LocalGroupMember -Group "Administrators" -Member $username -ErrorAction Ignore))
-{
-  Add-LocalGroupMember -Group "Administrators" -Member $username
-}
-if ((Get-LocalGroup -Name "docker-users" -ErrorAction Ignore) -and
-    !(Get-LocalGroupMember -Group "docker-users" -Member $username -ErrorAction Ignore))
-{
-  Add-LocalGroupMember -Group "docker-users" -Member $username
-}
-
-# run the customer warmup script if it exists
-# note that this runs as SYSTEM on windows
-$warmup = "\warmup.ps1"
-if (Test-Path -Path $warmup)
-{
-   # run as local admin elevated
-   Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
 }
 
 # configure the build agent
@@ -85,5 +41,4 @@ Write-Host "Running " $config
 Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
 
 # schedule the build agent to run
-$argList = "-ExecutionPolicy Unrestricted -File $runFileDest -username $username -password $password $runArgs"
-Start-Process -FilePath Powershell.exe -Verb RunAs -ArgumentList $argList
+Start-Process -FilePath Powershell.exe -ArgumentList "-ExecutionPolicy Unrestricted $runFileDest $runArgs"
