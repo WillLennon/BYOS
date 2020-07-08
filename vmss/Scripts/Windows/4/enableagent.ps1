@@ -29,6 +29,7 @@ Log-Message "Installing extension v4"
 Log-Message ("URL: " + $url)
 Log-Message ("Pool: " + $pool) 
 Log-Message ("runArgs: " + $runArgs)
+Log-Message ("interactive: " + $interactive)
 Log-Message ("agentDir: " + $agentDir)
 
 $agentExe = Join-Path -Path $agentDir -ChildPath "bin\Agent.Listener.exe"
@@ -162,6 +163,8 @@ if ($runAsUser)
          exit -106
       }
 
+      Log-Message "Scheduling agent to run"
+      $runCmd = Join-Path -Path $agentDir -ChildPath "run.cmd"
       try
       {
          if([string]::IsNullOrEmpty($runArgs))
