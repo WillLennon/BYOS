@@ -1,7 +1,5 @@
 param
 (
-   [string]$username,
-   [string]$password,
    [string]$runArgs
 )
 
@@ -14,9 +12,16 @@ else
 {  $cmd1 = New-ScheduledTaskAction -Execute "C:\agent\run.cmd" -WorkingDirectory "C:\agent" $runArgs }
 
 $windows = Get-WindowsEdition -Online
+
 if ($windows.Edition -like '*datacenter*' -or
     $windows.Edition -like '*server*' )
 {
+  # create administrator account
+  $username = 'AzDevOps'
+  $password = (New-Guid).ToString()
+  net user $username /delete
+  net user $username $password /add /y
+  net localgroup Administrators $username /add
   Register-ScheduledTask -TaskName "BuildAgent" -User $username -Password $password -Trigger $time1 -Action $cmd1 -Force
 }
 else
