@@ -46,10 +46,17 @@ $windows = Get-WindowsEdition -Online
 Log-Message ("Windows edition: " + $windows.Edition)
 
 # Determine if we should run as local user AzDevOps or as LocalSystem
-# We can only run as the local user if RunArgs is empty and this is Windows 10 Server/DataCenter
+# We can only run as the local user if this is Windows 10 Server/DataCenter
 $runAsUser = (($version -like '10.*') `
               -and ($windows.Edition -like '*datacenter*' -or $windows.Edition -like '*server*' ))
 Log-Message ("runAsUser: " + $runAsUser)
+
+# If the agent was already configured.  Abort.
+if (Test-Path -Path (Join-Path -Path $agentDir -ChildPath ".agent"))
+{
+   Log-Message "Agent was already configured.  Doing nothing."
+   exit 0
+}
 
 # unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
@@ -64,29 +71,6 @@ if (!(Test-Path -Path $agentExe))
    {
       Log-Message $Error[0]
       exit -100
-   }
-}
-
-# delete old configuration files if present
-Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".agent") -Force -ErrorAction Ignore
-Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials") -Force -ErrorAction Ignore
-Remove-Item -Path (Join-Path -Path $agentDir -ChildPath ".credentials_rsaparams") -Force -ErrorAction Ignore
-
-# Run the customer warmup script if it exists
-# Note that this runs as Local System
-$warmup = "\warmup.ps1"
-if (Test-Path -Path $warmup)
-{
-   # run as local admin elevated
-   Log-Message "Running warmup script"
-   try
-   {
-      Start-Process -FilePath PowerShell.exe -Verb RunAs -Wait -WorkingDirectory \ -ArgumentList "-ExecutionPolicy Unrestricted $warmup"
-   }
-   catch
-   {
-      Log-Message $Error[0]
-      exit -101
    }
 }
 
