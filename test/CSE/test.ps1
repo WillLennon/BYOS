@@ -36,8 +36,5 @@ if ($throw)
    throw [System.Exception] "throwing exception"
 }
 
-   Log-Message "throwing anyway"
-   throw [System.Exception] "throwing exception anyway"
-
 Log-Message "exiting"
-exit $exitCode
+exit 5
