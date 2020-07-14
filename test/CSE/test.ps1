@@ -30,7 +30,6 @@ Log-Message ("throw: " + $throw)
 Log-Message "sleeping"
 Start-Sleep $sleep
 
-# If the agent was already configured.  Abort.
 if ($throw)
 {
    Log-Message "throwing"
