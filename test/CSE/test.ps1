@@ -2,7 +2,7 @@ param
 (
    [int]$sleep,
    [int]$exitCode,
-   [switch]$throw,
+   [switch]$throw
 )
 
 function Log-Message 
