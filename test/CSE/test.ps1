@@ -37,4 +37,4 @@ if ($throw)
 }
 
 Log-Message "exiting"
-exit 5
+exit $exitCode
