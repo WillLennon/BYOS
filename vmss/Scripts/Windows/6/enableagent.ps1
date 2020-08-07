@@ -75,10 +75,12 @@ if (!(Test-Path -Path $agentExe))
 }
 
 # set the agent working directory to 'C:\a' if the environment variable is not set already
-$workingDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', 'machine')
-if ([string]::IsNullOrEmpty($workingDir))
+$workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', 'machine')
+if ([string]::IsNullOrEmpty($workDir))
 {
-   [System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', 'C:\a', 'machine')
+    $drive = (Get-Location).Drive.Name + ":"
+    $workDir = Join-Path -Path $drive -ChildPath "a"
+    [System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', $workDir, 'machine')
 }
 
 if ($runAsUser)
