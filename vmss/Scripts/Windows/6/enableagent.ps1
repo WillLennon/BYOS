@@ -82,7 +82,7 @@ if ([string]::IsNullOrEmpty($workDir))
     $workDir = Join-Path -Path $drive -ChildPath "a"
     [System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', $workDir, 'machine')
 }
-Log-Message ("URL: " + $url)
+Log-Message ("WorkDir: " + $workDir)
 
 if ($runAsUser)
 {
