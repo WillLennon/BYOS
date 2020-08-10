@@ -59,18 +59,19 @@ if (Test-Path -Path (Join-Path -Path $agentDir -ChildPath ".agent"))
 }
 
 # set the agent working directory to 'C:\a' if the environment variable is not set already
-$workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', 'machine')
-if ([string]::IsNullOrEmpty($workDir))
+$workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK')
+if (![string]::IsNullOrEmpty($workDir))
+{
+    Log-Message ("Found WorkDir: " + $workDir)
+}
+else
 {
     $drive = (Get-Location).Drive.Name + ":"
     $workDir = Join-Path -Path $drive -ChildPath "a"
-    [System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', $workDir, 'machine')
     [System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', $workDir, 'process')
+    [System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', $workDir, 'machine')
+    Log-Message ("Setting WorkDir: " + $workDir)
 }
-$workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', 'machine')
-Log-Message ("WorkDir: " + $workDir)
-$workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', 'process')
-Log-Message ("WorkDir: " + $workDir)
 
 # unzip the agent if it doesn't exist already
 if (!(Test-Path -Path $agentExe))
