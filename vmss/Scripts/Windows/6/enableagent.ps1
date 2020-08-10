@@ -65,8 +65,11 @@ if ([string]::IsNullOrEmpty($workDir))
     $drive = (Get-Location).Drive.Name + ":"
     $workDir = Join-Path -Path $drive -ChildPath "a"
     [System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', $workDir, 'machine')
+    [System.Environment]::SetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', $workDir, 'process')
 }
 $workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', 'machine')
+Log-Message ("WorkDir: " + $workDir)
+$workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK', 'process')
 Log-Message ("WorkDir: " + $workDir)
 
 # unzip the agent if it doesn't exist already
