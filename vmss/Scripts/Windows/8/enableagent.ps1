@@ -98,7 +98,7 @@ if ($runAsUser)
 {
    # create administrator account
    $username = 'AzDevOps'
-   $password = (New-Guid).ToString()
+   $password = 'A1b2838!K#n0sn0abc' #(New-Guid).ToString()
    $securePassword = ConvertTo-SecureString $password -AsPlainText -Force
 
    if (!(Get-LocalUser -Name $username -ErrorAction Ignore))
