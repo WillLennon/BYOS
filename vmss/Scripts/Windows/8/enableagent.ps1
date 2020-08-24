@@ -151,6 +151,9 @@ if ([string]::IsNullOrEmpty($username) -or [string]::IsNullOrEmpty($password))
           Log-Message "Configuring VM to reboot and rerun as AzDevOps to complete registration"
           Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -Value $username
           Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword -Value $password
+          Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomain -Value $env.computername
+          
+          // Rerun this script again after reboot
           $cmd = "PowerShell.exe C:\agent\enabledagent.ps1 -url $url -pool ""$pool"" -token $token -runArgs $runArgs"
           if ($interactiveUI)
           {
@@ -251,6 +254,7 @@ else
     # Delete the registry settings
     Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultUserName -ErrorAction Ignore
     Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultPassword -ErrorAction Ignore
+    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name DefaultDomain -ErrorAction Ignore
 
     Log-Message "Configuring agent to reboot, autologon, and run unelevated as AzDevOps with interactive UI"
     $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsAutoLogon --overwriteAutoLogon --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
