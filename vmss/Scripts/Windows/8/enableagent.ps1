@@ -25,7 +25,7 @@ function Log-Message
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $agentDir = $PSScriptRoot
 
-Log-Message "Installing extension v7"
+Log-Message "Installing extension v8"
 Log-Message ("URL: " + $url)
 Log-Message ("Pool: " + $pool) 
 Log-Message ("runArgs: " + $runArgs)
@@ -155,7 +155,7 @@ if ($runAsUser)
    else
    {
       Log-Message "Configuring agent to run elevated as AzDevOps without interactive UI"
-      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
+      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
       try
       {
          Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
