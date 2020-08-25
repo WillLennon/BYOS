@@ -194,7 +194,7 @@ else
 {
    Log-Message "Configuring agent to run as Local System"
 
-   $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --noRestart --replace --token $token"
+   $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --token $token"
    try
    {
       Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
