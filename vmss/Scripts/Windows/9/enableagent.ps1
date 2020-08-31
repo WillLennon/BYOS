@@ -154,7 +154,7 @@ if ($runAsUser)
    }
    else
    {
-      Log-Message "Configuring agent to run elevated as AzDevOps without interactive UI"
+      Log-Message "Configuring agent to run elevated as AzDevOps and as a Windows service"
       $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token $runArgs"
       try
       {
@@ -164,29 +164,6 @@ if ($runAsUser)
       {
          Log-Message $Error[0]
          exit -106
-      }
-
-      Log-Message "Scheduling agent to run"
-      $runCmd = Join-Path -Path $agentDir -ChildPath "run.cmd"
-      try
-      {
-         if([string]::IsNullOrEmpty($runArgs))
-         {
-            $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir
-         }
-         else
-         {
-            $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir $runArgs
-         }
-
-         $start1 = (Get-Date).AddSeconds(10)
-         $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
-         Register-ScheduledTask -TaskName "PipelinesAgent" -User $username -Password $password -RunLevel Highest -Trigger $time1 -Action $cmd1 -Force
-      }
-      catch
-      {
-          Log-Message $Error[0]
-          exit -108
       }
    }
 }
