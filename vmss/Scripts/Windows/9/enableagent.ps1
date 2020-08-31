@@ -155,7 +155,7 @@ if ($runAsUser)
    else
    {
       Log-Message "Configuring agent to run elevated as AzDevOps without interactive UI"
-      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
+      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token $runArgs"
       try
       {
          Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
@@ -197,7 +197,7 @@ else
    $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --token $token"
    try
    {
-      Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+      Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir $runArgs
    }
    catch
    {
