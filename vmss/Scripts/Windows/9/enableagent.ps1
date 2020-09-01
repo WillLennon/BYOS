@@ -169,41 +169,17 @@ if ($runAsUser)
 }
 else
 {
-   Log-Message "Configuring agent to run as Local System"
+   Log-Message "Configuring agent to run as a service as Local System"
 
-   $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --token $token"
+   $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --token $token $rungArgs"
    try
    {
-      Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir $runArgs
+      Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
    }
    catch
    {
       Log-Message $Error[0]
       exit -107
-   }
-
-   $runCmd = Join-Path -Path $agentDir -ChildPath "run.cmd"
-   Log-Message "Scheduling agent to run"
-
-   try
-   {
-      if([string]::IsNullOrEmpty($runArgs))
-      {
-         $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir
-      }
-      else
-      {
-         $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir $runArgs
-      }
-
-      $start1 = (Get-Date).AddSeconds(10)
-      $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
-      Register-ScheduledTask -TaskName "PipelinesAgent" -User System -Trigger $time1 -Action $cmd1 -Force
-   }
-   catch
-   {
-       Log-Message $Error[0]
-       exit -103
    }
 }
 
