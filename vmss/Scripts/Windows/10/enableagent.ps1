@@ -59,7 +59,7 @@ if (Test-Path -Path (Join-Path -Path $agentDir -ChildPath ".agent"))
 }
 
 # Begin MMS Initialization steps
-Write-Host "Disable Windows Defender..."
+Log-Message "Disable Windows Defender..."
 Get-Process -Name 'MpCmdRun' -ErrorAction Ignore | Stop-Process -force -ErrorAction Ignore
 Get-ScheduledTask -TaskPath '\Microsoft\Windows\Windows Defender\' -ErrorAction Ignore | Disable-ScheduledTask -ErrorAction Ignore
 Stop-Service -Force -Name WinDefend -ErrorAction Ignore
@@ -82,11 +82,11 @@ Set-MpPreference -SignatureDisableUpdateOnStartupWithoutEngine $true -ErrorActio
 Set-MpPreference -SubmitSamplesConsent 2 -ErrorAction Ignore
 Add-MpPreference -ExclusionPath 'c:\', 'd:\' -ErrorAction Ignore
 
-Write-Host "Disable VisualStudio/VSIXAutoUpdater Tasks..."
+Log-Message "Disable VisualStudio/VSIXAutoUpdater Tasks..."
 Get-ScheduledTask -TaskPath '\Microsoft\VisualStudio\' -ErrorAction Ignore | Disable-ScheduledTask -ErrorAction Ignore
 Get-ScheduledTask -TaskPath "\Microsoft\VisualStudio\Updates\" -ErrorAction Ignore | Disable-ScheduledTask -ErrorAction Ignore
 
-Write-Host "Disable Windows Update..."
+Log-Message "Disable Windows Update..."
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\DiskCleanup\' -TaskName 'SilentCleanup'
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\UpdateOrchestrator\' -TaskName 'Reboot'
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\UpdateOrchestrator\' -TaskName 'Refresh Settings'
@@ -117,7 +117,7 @@ New-ItemProperty -Path $regPath -Name 'DoNotConnectToWindowsUpdateInternetLocati
 New-ItemProperty -Path $regPath -Name 'DisableWindowsUpdateAccess' -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
 
 
-Write-Host "Disable Windows Telemetry (CompatTelRunner.exe etc.)..."
+Log-Message "Disable Windows Telemetry (CompatTelRunner.exe etc.)..."
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Application Experience\' -TaskName 'Microsoft Compatibility Appraiser'
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Application Experience\' -TaskName 'ProgramDataUpdater'
 Get-Process -Name 'CompatTelRunner' -ErrorAction Ignore | Stop-Process -force -ErrorAction Ignore
@@ -173,14 +173,12 @@ if (!(Test-Path $regPath))
 }
 New-ItemProperty -Path $regPath -Name "AllowTelemetry" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
 
-
 $regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\AutoLogger-Diagtrack-Listener"
 if (!(Test-Path $regPath))
 {
   New-Item -Path $regPath -Force -ErrorAction Ignore
 }
 New-ItemProperty -Path $regPath -Name "Start" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
-
 
 $regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\SQMLogger"
 if (!(Test-Path $regPath))
@@ -189,7 +187,6 @@ if (!(Test-Path $regPath))
 }
 New-ItemProperty -Path $regPath -Name "Start" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
 
-
 $regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\DiagTrack"
 if (!(Test-Path $regPath))
 {
@@ -197,7 +194,7 @@ if (!(Test-Path $regPath))
 }
 New-ItemProperty -Path $regPath -Name "Start" -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
 
-Write-Host "Disable Misc. Scheduled Tasks..."
+Log-Message "Disable Misc. Scheduled Tasks..."
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\.NET Framework\' -TaskName '.NET Framework NGEN v4.0.30319'
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\.NET Framework\' -TaskName '.NET Framework NGEN v4.0.30319 64'
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\AppID\' -TaskName 'SmartScreenSpecific'
@@ -221,7 +218,7 @@ Set-Service -name SysMain -StartupType Disabled
 Set-Service -name gupdate -StartupType Disabled
 Set-Service -name gupdatem -StartupType Disabled
 
-Write-Host "Disable Azure Security Scheduled Tasks..."
+Log-Message "Disable Azure Security Scheduled Tasks..."
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnceASMSERVICE'
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnceDETECTIONSERVICE'
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnceRELIANCESERVICE'
