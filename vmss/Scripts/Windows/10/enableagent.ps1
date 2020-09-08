@@ -58,10 +58,263 @@ if (Test-Path -Path (Join-Path -Path $agentDir -ChildPath ".agent"))
    exit 0
 }
 
-# Disable Windows Updates so the machine won't spontaneously reboot
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name NoAutoUpdate -Value 1
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name AUOptions -Value 1
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name NoAutoRebootWithLoggedOnUsers -Value 0
+# Begin MMS Initialization steps
+Write-Host "Disable Windows Defender..."
+Get-Process -Name 'MpCmdRun' -ErrorAction Ignore | Stop-Process -force -ErrorAction Ignore
+Get-ScheduledTask -TaskPath '\Microsoft\Windows\Windows Defender\' -ErrorAction Ignore | Disable-ScheduledTask -ErrorAction Ignore
+Stop-Service -Force -Name WinDefend -ErrorAction Ignore
+Set-MpPreference -DisableArchiveScanning $true -ErrorAction Ignore
+Set-MpPreference -DisableAutoExclusions  $true -ErrorAction Ignore
+Set-MpPreference -DisableBehaviorMonitoring $true -ErrorAction Ignore
+Set-MpPreference -DisableBlockAtFirstSeen $true -ErrorAction Ignore
+Set-MpPreference -DisableCatchupFullScan $true -ErrorAction Ignore
+Set-MpPreference -DisableCatchupQuickScan $true -ErrorAction Ignore
+Set-MpPreference -DisableIntrusionPreventionSystem $true -ErrorAction Ignore
+Set-MpPreference -DisableIOAVProtection $true -ErrorAction Ignore
+Set-MpPreference -DisablePrivacyMode $true -ErrorAction Ignore
+Set-MpPreference -DisableScanningNetworkFiles $true -ErrorAction Ignore
+Set-MpPreference -DisableScriptScanning $true -ErrorAction Ignore
+Set-MpPreference -EnableControlledFolderAccess Disable -ErrorAction Ignore
+Set-MpPreference -EnableNetworkProtection Disabled -ErrorAction Ignore
+Set-MpPreference -MAPSReporting 0 -ErrorAction Ignore
+Set-MpPreference -PUAProtection 0 -ErrorAction Ignore
+Set-MpPreference -SignatureDisableUpdateOnStartupWithoutEngine $true -ErrorAction Ignore
+Set-MpPreference -SubmitSamplesConsent 2 -ErrorAction Ignore
+Add-MpPreference -ExclusionPath 'c:\', 'd:\' -ErrorAction Ignore
+
+Write-Host "Disable VisualStudio/VSIXAutoUpdater Tasks..."
+Get-ScheduledTask -TaskPath '\Microsoft\VisualStudio\' -ErrorAction Ignore | Disable-ScheduledTask -ErrorAction Ignore
+Get-ScheduledTask -TaskPath "\Microsoft\VisualStudio\Updates\" -ErrorAction Ignore | Disable-ScheduledTask -ErrorAction Ignore
+
+Write-Host "Disable Windows Update..."
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\DiskCleanup\' -TaskName 'SilentCleanup'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\UpdateOrchestrator\' -TaskName 'Reboot'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\UpdateOrchestrator\' -TaskName 'Refresh Settings'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\UpdateOrchestrator\' -TaskName 'Schedule Scan'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\UpdateOrchestrator\' -TaskName 'USO_UxBroker_Display'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\UpdateOrchestrator\' -TaskName 'USO_UxBroker_ReadyToReboot'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\WindowsUpdate\' -TaskName 'Automatic App Update'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\WindowsUpdate\' -TaskName 'Scheduled Start'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\WindowsUpdate\' -TaskName 'sih'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\WindowsUpdate\' -TaskName 'sihboot'
+Stop-Service -Force -Name 'wuauserv' -ErrorAction Ignore
+Set-Service -Name 'wuauserv' -StartupType Disabled -ErrorAction Ignore
+
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "AUOptions" -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name "NoAutoUpdate" -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'DoNotConnectToWindowsUpdateInternetLocations' -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name 'DisableWindowsUpdateAccess' -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+
+
+Write-Host "Disable Windows Telemetry (CompatTelRunner.exe etc.)..."
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Application Experience\' -TaskName 'Microsoft Compatibility Appraiser'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Application Experience\' -TaskName 'ProgramDataUpdater'
+Get-Process -Name 'CompatTelRunner' -ErrorAction Ignore | Stop-Process -force -ErrorAction Ignore
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Customer Experience Improvement Program\' -TaskName 'Consolidator'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Customer Experience Improvement Program\' -TaskName 'KernelCeipTask'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Customer Experience Improvement Program\' -TaskName 'UsbCeip'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\DiskDiagnostic\' -TaskName 'Microsoft-Windows-DiskDiagnosticDataCollector'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Power Efficiency Diagnostics\' -TaskName 'AnalyzeSystem'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Windows Error Reporting\' -TaskName 'QueueReporting'
+Stop-Service -Force -Name 'DiagTrack' -ErrorAction Ignore
+Set-Service -Name 'DiagTrack' -StartupType Disabled -ErrorAction Ignore
+
+$regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Device Metadata"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "PreventDeviceMetadataFromNetwork" -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Policies\DataCollection"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "AllowTelemetry" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\SQMClient\Windows"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "CEIPEnable" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppCompat"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "AITEnable" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name "DisableUAR" -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\Software\Policies\Microsoft\Windows\DataCollection"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name  "AllowTelemetry" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\DataCollection"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "AllowTelemetry" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\AutoLogger-Diagtrack-Listener"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "Start" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Control\WMI\AutoLogger\SQMLogger"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "Start" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\DiagTrack"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "Start" -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
+
+Write-Host "Disable Misc. Scheduled Tasks..."
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\.NET Framework\' -TaskName '.NET Framework NGEN v4.0.30319'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\.NET Framework\' -TaskName '.NET Framework NGEN v4.0.30319 64'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\AppID\' -TaskName 'SmartScreenSpecific'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\ApplicationData\' -TaskName 'DsSvcCleanup'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Autochk\' -TaskName 'Proxy'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Chkdsk\' -TaskName 'ProactiveScan'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Data Integrity Scan\' -TaskName 'Data Integrity Scan'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Data Integrity Scan\' -TaskName 'Data Integrity Scan for Crash Recovery'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Defrag\' -TaskName 'ScheduledDefrag'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Diagnosis\' -TaskName 'Scheduled'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\maintenance\' -TaskName 'winsat'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\PI\' -TaskName 'Sqm-Tasks'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Windows\Server Manager\' -TaskName 'ServerManager'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\' -TaskName 'GoogleUpdateTaskMachineCore'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\' -TaskName 'GoogleUpdateTaskMachineUA'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath "\Microsoft\Windows\Speech\" -TaskName 'SpeechModelDownloadTask'
+Get-ScheduledTask -TaskPath '\Microsoft\XblGameSave\' -ErrorAction Ignore | Disable-ScheduledTask -ErrorAction Ignore
+Stop-Service -Force -Name 'PcaSvc' -ErrorAction Ignore
+Set-Service -Name 'PcaSvc' -StartupType Disabled -ErrorAction Ignore
+Set-Service -name SysMain -StartupType Disabled
+Set-Service -name gupdate -StartupType Disabled
+Set-Service -name gupdatem -StartupType Disabled
+
+Write-Host "Disable Azure Security Scheduled Tasks..."
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnceASMSERVICE'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnceDETECTIONSERVICE'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnceRELIANCESERVICE'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnStartASMSERVICE'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnStartDETECTIONSERVICE'
+Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnStartRELIANCESERVICE'
+
+$regPath = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\Maintenance"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'MaintenanceDisabled' -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\MRT"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'DontOfferThroughWUAU' -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name 'DontReportInfectionInformation' -Value 1 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search"; $name = "AllowCortana"; $value = 0;
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "AllowCortana" -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\dmwappushservice"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name "Start" -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
+
+Write-Host "Disable Template Services / User Services added by Desktop Experience"
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\CDPUserSvc"
+if (!(Test-Path $regPath)) {
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'Start' -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name 'UserServiceFlags' -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\OneSyncSvc"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'Start' -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name 'UserServiceFlags' -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\PimIndexMaintenanceSvc"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'Start' -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name 'UserServiceFlags' -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\UnistoreSvc"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'Start' -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name 'UserServiceFlags' -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\UserDataSvc"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'Start' -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name 'UserServiceFlags' -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Services\WpnUserService"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+New-ItemProperty -Path $regPath -Name 'Start' -Value 4 -PropertyType DWORD -Force -ErrorAction Ignore
+New-ItemProperty -Path $regPath -Name 'UserServiceFlags' -Value 0 -PropertyType DWORD -Force -ErrorAction Ignore
+
+$regPath = "HKLM:\SYSTEM\CurrentControlSet\Control"
+if (!(Test-Path $regPath))
+{
+  New-Item -Path $regPath -Force -ErrorAction Ignore
+}
+
+New-ItemProperty -Path $regPath -Name "ServicesPipeTimeout" -Value 120000 -PropertyType DWORD -Force -ErrorAction Ignore
+Write-Host "Done with MMS Initialization steps"
+# Begin MMS Initialization steps
 
 # set the agent working directory to 'C:\a' if the environment variable is not set already
 $workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK')
