@@ -406,7 +406,7 @@ if ($runAsUser)
    {
       # Run as a normal process and configure the agent to run once and stop
       Log-Message "Configuring agent to run once with elevated process running as AzDevOps"
-      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
+      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
       try
       {
          Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
