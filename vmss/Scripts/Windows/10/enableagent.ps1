@@ -402,10 +402,11 @@ if ($runAsUser)
          exit -102
       }
    }
-   else
+   else if([string]::IsNullOrEmpty($runArgs))
    {
+      # Only run as a Windows service for multi-use VMs because RunOnce is not supported when running as a service
       Log-Message "Configuring agent to run elevated as AzDevOps and as a Windows service"
-      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token $runArgs"
+      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
       try
       {
          Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
@@ -414,6 +415,36 @@ if ($runAsUser)
       {
          Log-Message $Error[0]
          exit -106
+      }
+   }
+   else
+   {
+      # Run as a normal process and configure the agent to run once and stop
+      Log-Message "Configuring agent to run once with elevated process running as AzDevOps"
+      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
+      try
+      {
+         Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+      }
+      catch
+      {
+         Log-Message $Error[0]
+         exit -106
+      }
+
+      Log-Message "Scheduling agent to run"
+      $runCmd = Join-Path -Path $agentDir -ChildPath "run.cmd"
+      try
+      {
+         $cmd1 = New-ScheduledTaskAction -Execute $runCmd -WorkingDirectory $agentDir $runArgs
+         $start1 = (Get-Date).AddSeconds(10)
+         $time1 = New-ScheduledTaskTrigger -At $start1 -Once 
+         Register-ScheduledTask -TaskName "PipelinesAgent" -User $username -Password $password -RunLevel Highest -Trigger $time1 -Action $cmd1 -Force
+      }
+      catch
+      {
+          Log-Message $Error[0]
+          exit -108
       }
    }
 }
