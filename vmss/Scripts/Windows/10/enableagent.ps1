@@ -45,7 +45,7 @@ Log-Message ("Windows version: " + $version)
 $windows = Get-WindowsEdition -Online
 Log-Message ("Windows edition: " + $windows.Edition)
 
-# Determine if we should run as local user AzDevOps or as LocalSystem
+# Determine if we should run as local user AzDevOps or as NetworkService
 # We can only run as the local user if this is Windows 10 Server/DataCenter
 $runAsUser = (($version -like '10.*') `
               -and ($windows.Edition -like '*datacenter*' -or $windows.Edition -like '*server*' ))
@@ -311,7 +311,7 @@ if (!(Test-Path $regPath))
 
 New-ItemProperty -Path $regPath -Name "ServicesPipeTimeout" -Value 120000 -PropertyType DWORD -Force -ErrorAction Ignore
 Write-Host "Done with MMS Initialization steps"
-# Begin MMS Initialization steps
+# End MMS Initialization steps
 
 # set the agent working directory to 'C:\a' if the environment variable is not set already
 $workDir = [System.Environment]::GetEnvironmentVariable('VSTS_AGENT_INPUT_WORK')
@@ -402,22 +402,7 @@ if ($runAsUser)
          exit -102
       }
    }
-   else if([string]::IsNullOrEmpty($runArgs))
-   {
-      # Only run as a Windows service for multi-use VMs because RunOnce is not supported when running as a service
-      Log-Message "Configuring agent to run elevated as AzDevOps and as a Windows service"
-      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
-      try
-      {
-         Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
-      }
-      catch
-      {
-         Log-Message $Error[0]
-         exit -106
-      }
-   }
-   else
+   else if(-not [string]::IsNullOrEmpty($runArgs))
    {
       # Run as a normal process and configure the agent to run once and stop
       Log-Message "Configuring agent to run once with elevated process running as AzDevOps"
@@ -447,10 +432,25 @@ if ($runAsUser)
           exit -108
       }
    }
+   else
+   {
+      # Only run as a Windows service for multi-use VMs because RunOnce is not supported when running as a service
+      Log-Message "Configuring agent to run elevated as AzDevOps and as a Windows service"
+      $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --windowsLogonAccount $username --windowsLogonPassword $password --token $token"
+      try
+      {
+         Start-Process -FilePath $agentConfig -ArgumentList $configParameters -NoNewWindow -Wait -WorkingDirectory $agentDir
+      }
+      catch
+      {
+         Log-Message $Error[0]
+         exit -106
+      }
+   }
 }
 else
 {
-   Log-Message "Configuring agent to run as a service as Local System"
+   Log-Message "Configuring agent to run as a service as NetworkService"
 
    $configParameters = " --unattended --url $url --pool ""$pool"" --auth pat --replace --runAsService --token $token $runArgs"
    try
