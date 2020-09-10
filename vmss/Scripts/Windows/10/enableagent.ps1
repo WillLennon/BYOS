@@ -214,9 +214,9 @@ Disable-ScheduledTask -ErrorAction Ignore -TaskPath "\Microsoft\Windows\Speech\"
 Get-ScheduledTask -TaskPath '\Microsoft\XblGameSave\' -ErrorAction Ignore | Disable-ScheduledTask -ErrorAction Ignore
 Stop-Service -Force -Name 'PcaSvc' -ErrorAction Ignore
 Set-Service -Name 'PcaSvc' -StartupType Disabled -ErrorAction Ignore
-Set-Service -name SysMain -StartupType Disabled
-Set-Service -name gupdate -StartupType Disabled
-Set-Service -name gupdatem -StartupType Disabled
+Set-Service -name SysMain -StartupType Disabled -ErrorAction Ignore
+Set-Service -name gupdate -StartupType Disabled -ErrorAction Ignore
+Set-Service -name gupdatem -StartupType Disabled -ErrorAction Ignore
 
 Log-Message "Disable Azure Security Scheduled Tasks..."
 Disable-ScheduledTask -ErrorAction Ignore -TaskPath '\Microsoft\Azure\Security\' -TaskName 'MonitoringOnceASMSERVICE'
@@ -402,7 +402,7 @@ if ($runAsUser)
          exit -102
       }
    }
-   else if(-not [string]::IsNullOrEmpty($runArgs))
+   elseif(-not [string]::IsNullOrEmpty($runArgs))
    {
       # Run as a normal process and configure the agent to run once and stop
       Log-Message "Configuring agent to run once with elevated process running as AzDevOps"
