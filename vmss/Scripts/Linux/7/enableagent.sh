@@ -52,9 +52,9 @@ cd $dir
 sudo chmod -R 777 $dir
 sudo chown -R AzDevOps:AzDevOps $dir
 
-# create and grant permissions to /opt/hostedtoolscache
-sudo mkdir -p /opt/hostedtoolscache
-sudo chmod 777 /opt/hostedtoolscache
+# create and grant permissions to /opt/hostedtoolcache
+sudo mkdir -p /opt/hostedtoolcache
+sudo chmod 777 /opt/hostedtoolcache
 
 # install dependencies
 echo installing dependencies
